@@ -1,0 +1,3 @@
+- fix filter on data table to using filter outside the table
+- add search page feature
+- create shared form data, create generic input form

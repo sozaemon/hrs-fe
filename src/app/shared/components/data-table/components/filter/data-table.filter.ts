@@ -1,7 +1,6 @@
 import { Component, computed, inject, input, OnInit, output, signal } from "@angular/core";
 import { ColumnDefinition, ColumnDefinitions } from "@app/shared/components/data-table/types/data-table.types";
 import { FilterRequest, LogicalOperator, ValidValue } from "@app/shared/components/data-table/types/filter-request.types";
-import { NzSpaceCompactComponent } from "ng-zorro-antd/space";
 import { NzSelectModule } from "ng-zorro-antd/select";
 import { NzInputModule } from "ng-zorro-antd/input";
 import { FormsModule } from "@angular/forms";
@@ -10,6 +9,7 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzDatePickerModule } from "ng-zorro-antd/date-picker";
 import { NzMessageService } from "ng-zorro-antd/message";
 import { format } from 'date-fns';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 
 interface CommonOption {
@@ -21,14 +21,15 @@ type DisplayOption = "single-string" | "single-number" | "single-date" | "double
 @Component({
   selector: "data-table-filter",
   templateUrl: "./template/data-table.filter.html",
+  styleUrl: "./css/data-table.filter.css",
   imports: [
     FormsModule,
-    NzSpaceCompactComponent,
     NzInputModule,
     NzSelectModule,
     NzButtonModule,
     NzTagModule,
-    NzDatePickerModule,]
+    NzDatePickerModule,
+    NzModalModule,]
 })
 export class DataTableFilterComponent implements OnInit {
 
@@ -50,6 +51,8 @@ export class DataTableFilterComponent implements OnInit {
 
   public value2 = signal<ValidValue | undefined>(undefined);
   public timeValue2 = signal<Date | undefined>(undefined);
+
+  public readonly displayFilterModal = signal<boolean>(false);
 
   public readonly valueOptions = signal<CommonOption[]>([]);
   public readonly valueOptions2 = signal<CommonOption[]>([]);
@@ -133,6 +136,8 @@ export class DataTableFilterComponent implements OnInit {
       this.isSearchDisabled.set(false);
     }
 
+    this.displayFilterModal.set(false);
+
   }
 
   private buildFilter(columnDef: ColumnDefinition<any>): FilterRequest | null {
@@ -152,21 +157,27 @@ export class DataTableFilterComponent implements OnInit {
     switch (this.filterMode()) {
       case "single-string":
       case "single-number":
-        if (!this.value() && this.operator() != "NOTNULL") {
+        if (this.operator() === "NOTNULL") {
+          break;
+        }
+        if (this.value() == null || this.value() === "") {
           this.message.warning("please input value");
           return null;
         }
         request["value"] = this.value();
         break;
       case "double-number":
-        if (!this.value() || !this.value2()) {
+        if (this.value() == null || this.value2() == null || this.value() === "" || this.value2() === "") {
           this.message.warning("please input values");
           return null;
         }
         request["values"] = [this.value() as ValidValue, this.value2() as ValidValue];
         break;
       case "single-date":
-        if (!this.timeValue() && this.operator() != "NOTNULL") {
+        if (this.operator() === "NOTNULL") {
+          break;
+        }
+        if (!this.timeValue()) {
           this.message.warning("please select date");
           return null;
         }
@@ -310,5 +321,13 @@ export class DataTableFilterComponent implements OnInit {
       selectedValue = `${filter.timeValues[0]} - ${filter.timeValues[1]}`;
     }
     return `${filter.label} ${this.operatorsModel[filter.operator].label} ${selectedValue}`;
+  }
+
+  public displayFilter(): void {
+    this.displayFilterModal.set(true);
+  }
+
+  public closeFilterModal(): void {
+    this.displayFilterModal.set(false);
   }
 }

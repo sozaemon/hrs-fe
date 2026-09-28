@@ -1,0 +1,54 @@
+.filter-container{
+  margin-bottom: 10px;
+}
+.filter-form {
+  display: grid;
+  gap: 20px;
+  padding: 4px 0 8px;
+}
+
+.form-field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.form-field > label {
+  color: #243b35;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-field nz-select,
+.form-field nz-date-picker,
+.form-field input {
+  width: 100%;
+  min-width: 0;
+}
+
+.value-controls,
+.range-controls {
+  min-width: 0;
+}
+
+.range-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.range-separator {
+  color: #687a74;
+  font-size: 13px;
+}
+
+@media (max-width: 520px) {
+  .range-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .range-separator {
+    display: none;
+  }
+}
