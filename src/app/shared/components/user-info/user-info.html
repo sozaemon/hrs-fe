@@ -1,0 +1,10 @@
+<div class="user-info">
+  <nz-avatar nzSize="small" nzText="A" class="user-avatar"></nz-avatar>
+  <div class="user-details">
+    <strong>{{ userName() || 'User' }}</strong>
+    <span>{{ userEmail() || 'No email available' }}</span>
+  </div>
+  <button nz-button nzType="text" nzDanger (click)="logOut()" aria-label="Sign out">
+    <nz-icon nzType="logout" />
+  </button>
+</div>

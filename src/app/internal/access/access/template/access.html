@@ -1,0 +1,23 @@
+<nz-card nzTitle="Access Management" class="access-page-card">
+  <div class="access-page-header">
+    <div>
+      <h2>Access permissions</h2>
+      <p>View and manage the routes and API permissions configured for the workspace.</p>
+    </div>
+    <button nz-button nzType="primary">Add Access</button>
+  </div>
+
+  <data-table
+    [data]="accessData()"
+    [columnDefinition]="accessColumns"
+    [totalRecords]="totalSize()"
+    [page]="page()"
+    [pageSize]="pageSize()"
+    [showPagination]="true"
+    [allowRowSelect]="false"
+    [actions]="resolveActions()"
+    (queryChange)="handleQueryChange($event)"
+    (doAction)="resolveRowAction($event)"
+    >
+  </data-table>
+</nz-card>

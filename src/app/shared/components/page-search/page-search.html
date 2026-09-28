@@ -1,0 +1,20 @@
+<div>
+  <nz-select
+    #pageSearch
+    [nzOptions]="menuItems()" 
+    nzShowSearch
+    [nzShowArrow]="false"
+    nzServerSearch
+    nzPlaceHolder="Input Search Menu"
+    (nzOnSearch)="onSearch($event)"
+    [style.minWidth]="'200px'"
+    [(ngModel)]="selectedItem"
+    [nzFilterOption]="filterFn"
+    (ngModelChange)="onSelectMenuItem()"
+    nzAllowClear="true"
+  >
+    @for(m of menuItems(); track m.label){
+      <nz-option [nzValue]="m.value" [nzLabel]="m.label" />
+    }
+  </nz-select>
+</div>

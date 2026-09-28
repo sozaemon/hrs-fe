@@ -1,0 +1,253 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+}
+
+.not-found-shell {
+  display: grid;
+  grid-template-columns: minmax(20rem, 0.9fr) minmax(24rem, 1.1fr);
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #f5f8f7;
+}
+
+.not-found-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+  padding: clamp(2rem, 6vw, 5rem);
+  background: #112b2b;
+  color: #f8faf9;
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #f8faf9;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 0.45rem;
+  background: #d9a441;
+  color: #112b2b;
+  font: 700 1.25rem Georgia, serif;
+}
+
+.not-found-copy {
+  max-width: 33rem;
+  padding: 4rem 0;
+}
+
+.eyebrow {
+  margin: 0 0 1rem;
+  color: #d9a441;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.display-number {
+  margin: 0;
+  color: #8cd1b4;
+  font: 700 clamp(5rem, 11vw, 9.5rem)/0.78 Georgia, serif;
+  letter-spacing: 0;
+}
+
+.not-found-copy h1 {
+  max-width: 30rem;
+  margin: 2rem 0 1rem;
+  color: #f8faf9;
+  font: 700 clamp(2rem, 4vw, 3.5rem)/1.08 Georgia, serif;
+  letter-spacing: 0;
+}
+
+.description {
+  max-width: 27rem;
+  margin: 0 0 2rem;
+  color: #a6bfba;
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+
+.not-found-copy button {
+  height: 2.9rem;
+  padding: 0 1.15rem;
+  border: 0;
+  border-radius: 0.35rem;
+  background: #d9a441;
+  color: #112b2b;
+  font-weight: 700;
+  box-shadow: 0 0.75rem 1.5rem rgb(0 0 0 / 14%);
+}
+
+.not-found-copy button:hover,
+.not-found-copy button:focus-visible {
+  background: #e6b85e;
+  color: #112b2b;
+}
+
+.support-note {
+  margin: 0;
+  color: #8cd1b4;
+  font-size: 0.75rem;
+}
+
+.not-found-art {
+  position: relative;
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgb(255 255 255 / 65%), transparent 55%),
+    #e8f0ed;
+}
+
+.not-found-art::before,
+.not-found-art::after {
+  position: absolute;
+  width: 22rem;
+  height: 22rem;
+  border: 1px solid rgb(25 56 49 / 10%);
+  border-radius: 50%;
+  content: "";
+}
+
+.not-found-art::before {
+  transform: translate(-11rem, -7rem);
+}
+
+.not-found-art::after {
+  transform: translate(12rem, 10rem);
+}
+
+.orbit {
+  position: absolute;
+  border: 1px solid rgb(49 147 110 / 22%);
+  border-radius: 50%;
+  transform: rotate(-28deg);
+}
+
+.orbit-one {
+  width: 34rem;
+  height: 11rem;
+}
+
+.orbit-two {
+  width: 25rem;
+  height: 8rem;
+  border-color: rgb(193 124 55 / 35%);
+  transform: rotate(42deg);
+}
+
+.calendar-shape {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(42vw, 22rem);
+  aspect-ratio: 1 / 0.88;
+  place-items: center;
+  border: 0.75rem solid #193831;
+  border-radius: 1.5rem;
+  background: #f8faf9;
+  box-shadow: 1rem 1.25rem 0 #d9a441, 0 2rem 4rem rgb(25 56 49 / 14%);
+  transform: rotate(-7deg);
+}
+
+.calendar-shape::before {
+  position: absolute;
+  top: 2.25rem;
+  right: 0;
+  left: 0;
+  height: 0.25rem;
+  background: #193831;
+  content: "";
+}
+
+.calendar-ring {
+  position: absolute;
+  top: -1.45rem;
+  width: 1rem;
+  height: 3.1rem;
+  border-radius: 1rem;
+  background: #d9a441;
+  box-shadow: inset 0 0 0 0.25rem #193831;
+}
+
+.ring-left { left: 3rem; }
+.ring-right { right: 3rem; }
+
+.calendar-line {
+  position: absolute;
+  width: 4rem;
+  height: 0.35rem;
+  margin-top: 6.5rem;
+  border-radius: 1rem;
+  background: #8cd1b4;
+}
+
+.calendar-date {
+  color: #193831;
+  font: 700 clamp(3.2rem, 8vw, 6rem)/0.8 Georgia, serif;
+  text-align: center;
+}
+
+.art-label {
+  position: absolute;
+  right: 2rem;
+  bottom: 1.75rem;
+  color: #71817c;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+@media (max-width: 760px) {
+  .not-found-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .not-found-panel {
+    min-height: 70dvh;
+    padding: 1.5rem;
+  }
+
+  .not-found-copy {
+    padding: 3rem 0;
+  }
+
+  .not-found-art {
+    min-height: 30dvh;
+  }
+
+  .calendar-shape {
+    width: min(58vw, 15rem);
+    border-width: 0.5rem;
+    border-radius: 1rem;
+    box-shadow: 0.65rem 0.8rem 0 #d9a441, 0 1rem 2rem rgb(25 56 49 / 14%);
+  }
+
+  .calendar-shape::before {
+    top: 1.5rem;
+  }
+
+  .calendar-ring {
+    top: -1.1rem;
+    width: 0.75rem;
+    height: 2.3rem;
+  }
+
+  .ring-left { left: 2rem; }
+  .ring-right { right: 2rem; }
+  .calendar-line { margin-top: 4.25rem; }
+  .art-label { right: 1rem; bottom: 1rem; }
+}

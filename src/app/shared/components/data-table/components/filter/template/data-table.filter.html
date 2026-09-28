@@ -1,0 +1,60 @@
+<div class="filter-container">
+  <nz-space-compact>
+    <nz-select [(ngModel)]="field" name="field" [style.minWidth]="'200px'" 
+      nzPlaceHolder="Select Field"
+      (ngModelChange)="onFieldModelChange()">
+      @for( fl of filterAbleColumnDef(); track fl.value){
+        <nz-option [nzValue]="fl.value" [nzLabel]="fl.label"/>
+      }
+    </nz-select>
+    <nz-select  [(ngModel)]="operator" name="operator" [style.minWidth]="'150px'" 
+      nzPlaceHolder="Select Operator">
+      @for(op of operators(); track op.value){
+        <nz-option [nzValue]="op.value" [nzLabel]="op.label" />
+      }
+    </nz-select>
+    @switch (filterMode()) {
+      @case("single-string"){
+        @if(valueOptions().length > 0){
+          <nz-select  [(ngModel)]="value" name="valueSelect" [style.minWidth]="'200px'">
+            @for(o of valueOptions(); track o){
+              <nz-option [nzValue]="o.value" [nzLabel]="o.label" />
+            }
+          </nz-select>
+        }@else{
+          <input nz-input id="value" [(ngModel)]="value" 
+            placeholder="Input Search Value" aria-label="Search Value" [style.minWidth]="'200px'"/>
+        }
+      }
+      @case("single-number"){
+        <input type="number" id="numberInput" [(ngModel)]="value" nzPlaceHolder="Input Number Value"
+          aria-label="Search Number" [style.minWidth]="'200px'"/>
+      }
+      @case("single-date"){
+        <nz-date-picker [(ngModel)]="timeValue" nzPlaceHolder="Select Date"/>
+      }
+      @case("double-number"){
+        <input type="number" id="numberInput" [(ngModel)]="value" nzPlaceHolder="Input Number Value"
+          aria-label="Search Number" [style.minWidth]="'200px'"/>
+        <span>&nbsp;-&nbsp;</span>
+        <input type="number" id="numberInput2" [(ngModel)]="value2" nzPlaceHolder="Input Number Value"
+          aria-label="Search Number" [style.minWidth]="'200px'"/>
+      }
+      @case("double-date"){
+        <nz-date-picker [(ngModel)]="timeValue" nzPlaceHolder="Select Date"/>
+        <span>&nbsp;-&nbsp;</span>
+        <nz-date-picker [(ngModel)]="timeValue2" nzPlaceHolder="Select Date"/>
+      }
+    }
+    
+    <button nz-button nzType="primary" (click)="addFilter()">Add</button>
+    <button nz-button nzType="primary" (click)="applyFilter()" [disabled]="isSearchDisabled()">Search</button>
+  </nz-space-compact>
+  <div class="tags-holder">
+    @for(fl of collectedFilters(); track fl.fieldName){
+      <nz-tag nzMode="closeable" (nzOnClose)="removeFilter(fl)" nzColor="geekblue">
+        {{resolveFilterTag(fl)}}
+      </nz-tag>
+    }
+  </div>
+</div>

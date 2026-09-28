@@ -1,0 +1,56 @@
+<ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapse()" class="nav-menu">
+  @for (navItem of navigationItems(); track navItem.url) {
+    @if (navItem.children?.length) {
+      <li nz-submenu 
+        [nzTitle]="navItem.title ?? ''" 
+        [nzIcon]="navItem.icon ?? null">
+        <ul>
+          <ng-container
+            *ngTemplateOutlet="navigationMenu; context: { $implicit: navItem.children }">
+          </ng-container>
+        </ul>
+      </li>
+    } @else {
+      <li nz-menu-item (click)="navigateToRoute(navItem.url)" 
+        (keydown)="navigateToRoute(navItem.url)">
+        @if(navItem.icon){
+          <nz-icon [nzType]="navItem.icon" />
+        }
+        @if(!isCollapse()){
+          <span>{{ navItem.title ?? 'No title' }}</span>
+        }
+      </li>
+    }
+  } @empty {
+    <li nz-menu-item nzDisabled>Navigation empty</li>
+  }
+
+  <ng-template #navigationMenu let-items>
+  @for (navItem of items; track navItem.url) {
+    @if (navItem.children.length) {
+      <li nz-submenu [nzTitle]="navItem.title ?? ''">
+        @if(navItem.icon){
+          <nz-icon [nzType]="navItem.icon" nzTheme="outline" />
+        }
+        <ul>
+          <ng-container
+            *ngTemplateOutlet="navigationMenu; context: { $implicit: navItem.children }">
+          </ng-container>
+        </ul>
+      </li>
+    } @else {
+      <li nz-menu-item (click)="navigateToRoute(navItem.url)"
+        (keydown)="navigateToRoute(navItem.url)">
+        @if(navItem.icon){
+          <nz-icon [nzType]="navItem.icon" nzTheme="outline" />
+        }
+        <span>{{ navItem.title ?? "No title"}}</span>
+      </li>
+    }
+  } @empty {
+    <li nz-menu-item nzDisabled>Navigation empty</li>
+  }
+</ng-template>
+</ul>
+
+

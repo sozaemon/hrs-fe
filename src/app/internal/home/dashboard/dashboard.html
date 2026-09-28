@@ -1,0 +1,65 @@
+<div>
+  <div class="content-heading">
+        <div>
+          <nz-breadcrumb>
+            <nz-breadcrumb-item>Workspace</nz-breadcrumb-item>
+            <nz-breadcrumb-item>Overview</nz-breadcrumb-item>
+          </nz-breadcrumb>
+          <h1>Good morning, Admin.</h1>
+          <p>Here is what is happening across your people operations today.</p>
+        </div>
+        <button nz-button nzType="primary">
+          <nz-icon nzType="team" />
+          View directory
+        </button>
+      </div>
+
+      <div class="stats-grid">
+        <nz-card class="stat-card">
+          <nz-statistic nzTitle="Total employees" [nzValue]="248" [nzPrefix]="'+'" />
+          <span class="stat-note positive">+8.2% <span>vs last month</span></span>
+        </nz-card>
+        <nz-card class="stat-card">
+          <nz-statistic nzTitle="On leave today" [nzValue]="12" />
+          <span class="stat-note neutral">4.8% <span>of your workforce</span></span>
+        </nz-card>
+        <nz-card class="stat-card">
+          <nz-statistic nzTitle="Open positions" [nzValue]="18" />
+          <span class="stat-note positive">+3 <span>new this week</span></span>
+        </nz-card>
+        <nz-card class="stat-card">
+          <nz-statistic nzTitle="Pending reviews" [nzValue]="7" />
+          <span class="stat-note warning">Needs attention</span>
+        </nz-card>
+      </div>
+
+      <div class="dashboard-grid">
+        <nz-card nzTitle="Upcoming time off">
+          <div class="leave-list">
+            <div class="leave-row">
+              <nz-avatar nzText="JD" class="avatar-blue"></nz-avatar>
+              <div><strong>Jordan Davis</strong><span>Annual leave</span></div>
+              <time>Today</time>
+            </div>
+            <div class="leave-row">
+              <nz-avatar nzText="SC" class="avatar-green"></nz-avatar>
+              <div><strong>Sarah Chen</strong><span>Personal day</span></div>
+              <time>Tomorrow</time>
+            </div>
+            <div class="leave-row">
+              <nz-avatar nzText="MK" class="avatar-gold"></nz-avatar>
+              <div><strong>Marcus King</strong><span>Annual leave</span></div>
+              <time>18 Sep</time>
+            </div>
+          </div>
+        </nz-card>
+
+        <nz-card nzTitle="Quick actions">
+          <div class="quick-actions">
+            <button nz-button nzType="default"><nz-icon nzType="team" />Add employee</button>
+            <button nz-button nzType="default"><nz-icon nzType="calendar" />Request time off</button>
+            <button nz-button nzType="default"><nz-icon nzType="setting" />Manage settings</button>
+          </div>
+        </nz-card>
+      </div>
+</div>

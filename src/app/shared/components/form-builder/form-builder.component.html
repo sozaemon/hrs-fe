@@ -1,0 +1,66 @@
+<form nz-form [formGroup]="form" (ngSubmit)="submit()" [nzLayout]="'vertical'" class="dynamic-form" novalidate>
+  <div class="dynamic-form-grid" [style.gridTemplateColumns]="'repeat(' + (config().columns ?? 1) + ', minmax(0, 1fr))'">
+    @for (field of config().fields; track field.key) {
+      <nz-form-item class="form-field">
+        @if (field.label) {
+          <nz-form-label [nzFor]="field.key">{{ field.label }}</nz-form-label>
+        }
+
+        <nz-form-control [nzValidateStatus]="control(field)" [nzErrorTip]="getErrorMessage(field)">
+          @switch (field.type) {
+            @case ('select') {
+              <nz-select
+                [id]="field.key"
+                [formControlName]="field.key"
+                [nzSize]="size()"
+                [nzPlaceHolder]="field.placeholder ?? 'Select an option'"
+              >
+                @for (option of field.options ?? []; track option.value) {
+                  <nz-option [nzValue]="option.value" [nzLabel]="option.label" [nzDisabled]="option.disabled ?? false"></nz-option>
+                }
+              </nz-select>
+            }
+            @case ('checkbox') {
+              <label nz-checkbox [formControlName]="field.key">{{ field.label }}</label>
+            }
+            @case ('radio') {
+              <nz-radio-group [formControlName]="field.key" [nzSize]="size()">
+                @for (option of field.options ?? []; track option.value) {
+                  <label nz-radio [nzValue]="option.value">{{ option.label }}</label>
+                }
+              </nz-radio-group>
+            }
+            @case ('date') {
+              <nz-date-picker
+                [formControlName]="field.key"
+                [nzSize]="size()"
+                [nzPlaceHolder]="field.placeholder ?? ''"
+              ></nz-date-picker>
+            }
+            @case ('file') {
+              <input nz-input [id]="field.key" [formControlName]="field.key" class="form-control" type="file" [attr.aria-invalid]="isInvalid(field)" />
+            }
+            @default {
+              <input
+                nz-input
+                [id]="field.key"
+                [formControlName]="field.key"
+                class="form-control"
+                [type]="inputType(field)"
+                [placeholder]="field.placeholder ?? ''"
+                [nzSize]="size()"
+                [attr.aria-invalid]="isInvalid(field)"
+              />
+            }
+          }
+        </nz-form-control>
+      </nz-form-item>
+    }
+  </div>
+
+  @if (showActions()) {
+    <div class="form-actions">
+      <button nz-button nzType="primary" [nzSize]="size()" type="submit">{{ submitLabel() }}</button>
+    </div>
+  }
+</form>

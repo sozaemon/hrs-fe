@@ -1,0 +1,78 @@
+<div>
+  <data-table-filter [columnDefinition]="clDefinition()" 
+    (filters)="readFilterData($event)"/>
+  <nz-table
+    [nzData]="data()"
+    [nzFrontPagination]="false"
+    [nzLoading]="loading()"
+    [nzPageIndex]="page()"
+    [nzPageSize]="pageSize()"
+    [nzShowPagination]="showPagination()"
+    [nzTotal]="totalRecords()"
+    (nzQueryParams)="onQueryParamsChange($event)">
+    <thead>
+      <tr>
+        @if (rowSelectionEnabled()) {
+          <th
+            id="headerCheckbox"
+            nzShowCheckbox
+            [nzChecked]="allDataIsChecked()"
+            [nzIndeterminate]="anyDataIsChecked() && !allDataIsChecked()"
+            (nzCheckedChange)="onAllRowsChecked($event)">
+          </th>
+        }
+        @for (column of columnDefinition(); track column.field) {
+          <th [id]="column.field"
+            [nzColumnKey]="column.field"
+            [nzSortFn]="column.allowSort ?? false"
+            [nzShowSort]="column.allowSort ?? false">
+            {{ column.header }}
+          </th>
+        }
+        @if(actions().length > 1){
+          <th id="actions">Actions</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of data(); track row[rowKey()]) {
+        <tr>
+          @if (rowSelectionEnabled()) {
+            <td
+              nzShowCheckbox
+              [nzChecked]="rowContainSelectedRow(row)"
+              (nzCheckedChange)="onRowClick(row)">
+            </td>
+          }
+          @for (column of columnDefinition(); track column.field) {
+            <td>{{ renderCell(row, column) }}</td>
+          }
+          @if(actions().length > 1){
+            <td>
+              <nz-space-compact>
+                @for(ac of actions(); track ac.name){
+                  <button 
+                    nz-button
+                    nzType="primary"
+                    nzSize="small"
+                    (click)="callAction(ac, row)"
+                    [style.backgroundColor]="ac.color ?? 'blue'"
+                    >
+                    @if(ac.icon){
+                      <nz-icon [nzType]="ac.icon" />
+                    }
+                    @else{
+                      {{ac.label}}
+                    }
+                  </button>
+                }
+              </nz-space-compact>
+            </td>
+          }
+
+        </tr>
+      }
+      
+    </tbody>
+  </nz-table>
+</div>

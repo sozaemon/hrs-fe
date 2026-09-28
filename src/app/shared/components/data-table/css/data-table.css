@@ -1,0 +1,14 @@
+.tags-holder {
+  display:flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 10px;
+}
+.filter-container {
+  display:flex;
+  flex-direction: column;
+  margin: 0px 15px 0px 15px;
+  width: 100%;
+  gap: 15px;
+}

@@ -1,0 +1,10 @@
+:host { display: block; min-height: 100dvh; }
+.login-shell { display: grid; grid-template-columns: minmax(18rem, .9fr) minmax(24rem, 1.1fr); min-height: 100dvh; background: #f5f8f7; }
+.login-intro { display: flex; flex-direction: column; justify-content: space-between; padding: clamp(2rem, 6vw, 5rem); background: #112b2b; color: #f8faf9; }
+.brand-lockup { display: flex; align-items: center; gap: .75rem; }.brand-lockup strong { font-size: .95rem; }
+.brand-mark { display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: .45rem; background: #d9a441; color: #112b2b; font: 700 1.25rem Georgia, serif; }
+.intro-copy { max-width: 28rem; }.eyebrow { margin: 0 0 .75rem; color: #d9a441; font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.intro-copy h1 { margin: 0; font: 700 clamp(2.4rem, 5vw, 4.5rem)/1.04 Georgia, serif; letter-spacing: -.02em; }.intro-copy p:last-child { max-width: 25rem; margin: 1.25rem 0 0; color: #a6bfba; font-size: 1rem; line-height: 1.7; }.intro-footer { display: flex; align-items: center; gap: .55rem; color: #8cd1b4; font-size: .78rem; }
+.login-panel { display: grid; place-items: center; padding: 2rem; }.login-panel nz-card { width: min(100%, 28rem); box-shadow: 0 1rem 3rem rgb(24 55 48 / 8%); }.login-panel :where(.ant-card-body) { padding: clamp(1.5rem, 4vw, 3rem); }
+.login-panel h2 { margin: 0; color: #193831; font: 700 2rem/1.15 Georgia, serif; }.subtitle { margin: .75rem 0 2rem; color: #71817c; }.login-panel form { display: grid; gap: .25rem; }.login-panel nz-form-label { color: #36514c; font-weight: 600; }.login-panel button { margin-top: .75rem; height: 2.8rem; }.login-panel nz-alert { margin: .5rem 0; }
+@media (max-width: 700px) { .login-shell { grid-template-columns: 1fr; }.login-intro { min-height: 15rem; padding: 1.5rem; gap: 3rem; }.intro-copy h1 { font-size: 2.5rem; }.login-panel { padding: 1rem; } }

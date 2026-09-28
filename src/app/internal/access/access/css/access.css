@@ -1,0 +1,22 @@
+.access-page-card {
+  width: 100%;
+}
+
+.access-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.access-page-header h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.access-page-header p {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.65);
+}
