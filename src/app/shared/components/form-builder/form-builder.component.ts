@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, input, output } from '@angular/core';
+import { Component, effect, inject, input, OnInit, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilderService } from '@app/shared/components/form-builder/service/form-builder.service';
 import { FieldOption, FormConfig, FormField, FormSize } from '@app/shared/components/form-builder/types/types';
@@ -28,23 +28,24 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
   templateUrl: './form-builder.component.html',
   styleUrl: './form-builder.component.css',
 })
-export class DynamicFormBuilderComponent {
+export class DynamicFormBuilder implements OnInit {
   readonly config = input<FormConfig>({ fields: [] });
   readonly formSize = input<FormSize>('default');
   readonly submitLabel = input<string>('Submit');
   readonly showActions = input<boolean>(true);
+
+  readonly formBuilderService = inject(FormBuilderService);
 
   readonly submitted = output<Record<string, unknown>>();
   readonly valueChange = output<Record<string, unknown>>();
 
   form: FormGroup = new FormGroup({});
 
-  constructor(private readonly formBuilderService: FormBuilderService) {
-    effect(() => {
-      const nextConfig = this.config() ?? { fields: [] };
-      this.form = this.formBuilderService.createForm(nextConfig);
-      this.form.valueChanges.subscribe((value) => this.valueChange.emit(value));
-    });
+  ngOnInit(): void {
+    const config = this.config() ?? { fields: [] };
+
+    this.form = this.formBuilderService.createForm(config);
+    this.form.valueChanges.subscribe((v) => this.valueChange.emit(v));
   }
 
   submit(): void {

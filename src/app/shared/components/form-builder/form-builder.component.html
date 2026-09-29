@@ -1,9 +1,14 @@
-<form nz-form [formGroup]="form" (ngSubmit)="submit()" [nzLayout]="'vertical'" class="dynamic-form" novalidate>
-  <div class="dynamic-form-grid" [style.gridTemplateColumns]="'repeat(' + (config().columns ?? 1) + ', minmax(0, 1fr))'">
+<form nz-form [formGroup]="form" 
+  (ngSubmit)="submit()" 
+  [nzLayout]="'vertical'" 
+  class="dynamic-form" novalidate>
+  <div class="dynamic-form-grid" 
+    [style.gridTemplateColumns]="'repeat(' + (config().columns ?? 1) + ', minmax(0, 1fr))'"
+    >
     @for (field of config().fields; track field.key) {
       <nz-form-item class="form-field">
         @if (field.label) {
-          <nz-form-label [nzFor]="field.key">{{ field.label }}</nz-form-label>
+          <nz-form-label class="form-label" [nzFor]="field.key">{{ field.label }}</nz-form-label>
         }
 
         <nz-form-control [nzValidateStatus]="control(field)" [nzErrorTip]="getErrorMessage(field)">

@@ -3,7 +3,6 @@ import { inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { NzMessageService } from "ng-zorro-antd/message";
 import { AuthService } from "@app/core/auth/service/auth.service";
-import { AUTHENTICATION_KEY } from "@app/core/auth/types/authentication-key";
 import { catchError, switchMap, throwError } from "rxjs";
 
 export const AuthenticationInterceptor: HttpInterceptorFn = (request: HttpRequest<unknown>, next: HttpHandlerFn) => {
@@ -13,7 +12,8 @@ export const AuthenticationInterceptor: HttpInterceptorFn = (request: HttpReques
   const authService = inject(AuthService);
 
   const logOutAndReturnToLogin = () => {
-    localStorage.setItem(AUTHENTICATION_KEY.STORAGE_IS_AUTHENTICATED, "false");
+    authService.revokeAuthentication();
+
     if (router.url !== "/login") {
       router.navigate(["/login"], { queryParams: { returnUrl: router.url } });
     }

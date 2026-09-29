@@ -8,3 +8,11 @@ export interface Access extends Record<string, RecordType> {
   method: string;
   description?: string;
 }
+
+export interface Role extends Record<string, RecordType>{
+  id: number;
+  code:string;
+  name:string;
+  description?:string;
+  active?:boolean;
+}

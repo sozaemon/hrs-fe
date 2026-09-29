@@ -1,14 +1,13 @@
 <div>
-  <data-table-filter [columnDefinition]="clDefinition()" 
-    (filters)="readFilterData($event)"/>
+  <data-table-filter [filterDefinition]="filterDefinition()" (filters)="readFilterData($event)"/>
   <nz-table
     [nzData]="data()"
     [nzFrontPagination]="false"
     [nzLoading]="loading()"
-    [nzPageIndex]="page()"
-    [nzPageSize]="pageSize()"
-    [nzShowPagination]="showPagination()"
+    [nzPageIndex]="pageIndex"
+    [nzPageSize]="size"
     [nzTotal]="totalRecords()"
+    [nzShowPagination]="showPagination()"
     (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
       <tr>
@@ -29,7 +28,7 @@
             {{ column.header }}
           </th>
         }
-        @if(actions().length > 1){
+        @if(actions().length > 0){
           <th id="actions">Actions</th>
         }
       </tr>

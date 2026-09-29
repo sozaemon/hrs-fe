@@ -11,6 +11,7 @@ import { DataTableFilterComponent } from "@app/shared/components/data-table/comp
 import { NzSpaceCompactComponent } from "ng-zorro-antd/space";
 import { NzIconModule } from "ng-zorro-antd/icon";
 import { NzButtonModule } from "ng-zorro-antd/button";
+import { FilterDefinitions } from "./components/filter/type/data-table-filter.type";
 
 @Component({
   imports: [
@@ -37,7 +38,11 @@ export class DataTable<T extends Record<string, RecordType>> implements OnInit {
   public readonly useRowsCheckbox = input<boolean>(false);
   public readonly actions = input<ColumnAction[]>([]);
 
-  public readonly clDefinition = signal<ColumnDefinitions<any>>([]);
+  public readonly filterDefinition = signal<FilterDefinitions>([]);
+
+  public pageIndex: number = 0;
+  public size: number = 0;
+  public total: number = 0;
 
 
   public currentPage = output<number>();
@@ -52,7 +57,20 @@ export class DataTable<T extends Record<string, RecordType>> implements OnInit {
   private readonly appliedFilter = signal<FilterRequest[]>([]);
 
   ngOnInit(): void {
-    this.clDefinition.set(this.columnDefinition() as ColumnDefinitions<any>);
+
+    this.pageIndex = this.page();
+    this.size = this.pageSize();
+    this.total = this.totalRecords();
+
+    const _filterDefinition: FilterDefinitions = this.columnDefinition().map((m) => {
+      return {
+        field: m.field,
+        header: m.header,
+        allowFilter: m.allowFilter,
+        filterOptions: m.filterOptions
+      }
+    })
+    this.filterDefinition.set(_filterDefinition);
   }
 
   anyDataIsChecked(): boolean {
@@ -78,26 +96,17 @@ export class DataTable<T extends Record<string, RecordType>> implements OnInit {
       }
     }
 
+    this.pageIndex = params.pageIndex;
+    this.size = params.pageSize;
+
     this.queryChange.emit({
-      pageIndex: params.pageIndex,
-      pageSize: params.pageSize,
+      pageIndex: this.pageIndex,
+      pageSize: this.size,
       sort,
       filters: this.appliedFilter(),
     });
   }
 
-  onSearch(searchValue: Record<string, unknown>): void {
-    const keys = Object.keys(searchValue) as string[];
-
-    for (const key in keys) {
-      const columnDefs: ColumnDefinition<T>[] = this.columnDefinition().filter((f) => f.field === key)
-      if (columnDefs.length <= 0) {
-        continue;
-      }
-      // determine filter type base on key yang column def configuration
-
-    }
-  }
   onAllRowsChecked(checked: boolean): void {
     const selectedRows = checked
       ? [...this._selectedRows(), ...this.data().filter((row) => !this.rowContainSelectedRow(row))]
@@ -138,7 +147,7 @@ export class DataTable<T extends Record<string, RecordType>> implements OnInit {
 
     this.queryChange.emit({
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: this.size,
       sort: undefined,
       filters: filter
     })

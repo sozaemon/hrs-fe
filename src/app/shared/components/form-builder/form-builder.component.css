@@ -1,24 +1,42 @@
 .dynamic-form {
   display: block;
   width: 100%;
+  box-sizing: border-box;
   padding: 10px;
 }
 
 .dynamic-form-grid {
   display: grid;
+  width: 100%;
   gap: 5px;
 }
 
 .form-field {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: start;
+  min-width: 0;
+  width: 100%;
+  margin-bottom: 5px;
+  gap: 3px;
 }
 
 .form-label {
+  display: block;
+  padding: 0;
+  text-align: left;
   font-size: 0.9rem;
   font-weight: 600;
   color: #1f2937;
+}
+
+.form-field nz-form-control,
+.form-field nz-select,
+.form-field nz-date-picker,
+.form-field nz-radio-group {
+  display: block;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
 }
 
 .form-control {

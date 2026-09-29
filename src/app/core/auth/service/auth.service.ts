@@ -16,6 +16,11 @@ export class AuthService {
 
   private readonly serverClient = inject(ServerClient);
 
+  revokeAuthentication(): void {
+    localStorage.setItem(AUTHENTICATION_KEY.STORAGE_IS_AUTHENTICATED, "false");
+    this.isAuthenticated.set(false);
+  }
+
   login(username: string, password: string): Observable<boolean> {
 
     let result: boolean = false;
@@ -45,8 +50,7 @@ export class AuthService {
   logout(): Observable<HttpResponseBody<void>> {
     return this.serverClient.post<{}, void>("auth/logout").pipe(
       tap(e => {
-        localStorage.setItem(AUTHENTICATION_KEY.STORAGE_IS_AUTHENTICATED, "false");
-        this.isAuthenticated.set(false);
+        this.revokeAuthentication();
       })
     );
   }

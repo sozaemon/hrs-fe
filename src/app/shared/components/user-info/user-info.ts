@@ -25,11 +25,11 @@ export class UserInfo implements OnInit {
   ngOnInit(): void {
     this.loadUsername.set(true);
 
-    this.userService.fetchUserData().subscribe(r => {
-      this.userName.set(r?.data.fullName || null);
-      this.userEmail.set(r?.data.email || null)
-      this.loadUsername.set(false);
-    })
+    // this.userService.fetchUserData().subscribe(r => {
+    //   this.userName.set(r?.data.fullName || null);
+    //   this.userEmail.set(r?.data.email || null)
+    //   this.loadUsername.set(false);
+    // })
 
     this.userService.fetchUserData()
       .subscribe({

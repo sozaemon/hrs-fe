@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { Component, inject, OnInit, signal, ViewChild } from "@angular/core";
 import { DataTable } from "@app/shared/components/data-table/data-table";
 import { NzButtonModule } from "ng-zorro-antd/button";
 import { NzCardModule } from "ng-zorro-antd/card";
@@ -8,10 +8,11 @@ import { Access } from "@app/internal/access/access/types/access.type";
 import { ColumnAction, DataTableQuery, RowAction } from "@app/shared/components/data-table/types/data-table.types";
 import { columnDefinition } from "./types/column.definition";
 import { FilterRequest } from "@app/shared/components/data-table/types/filter-request.types";
+import { AccessForm, AccessResult } from "./components/access-form/access-form";
 
 
 @Component({
-  imports: [DataTable, NzCardModule, NzButtonModule],
+  imports: [DataTable, NzCardModule, NzButtonModule, AccessForm],
   templateUrl: "./template/access.html",
   styleUrl: "./css/access.css",
 })
@@ -30,8 +31,14 @@ export class AccessPage implements OnInit {
 
   readonly accessColumns = columnDefinition;
 
+  @ViewChild(AccessForm) accessForm!: AccessForm;
+
   ngOnInit(): void {
     this.loadData();
+  }
+
+  public openAccessForm(): void {
+    this.accessForm.openForm();
   }
 
   private loadData(filter: FilterRequest[] = []): void {
@@ -63,6 +70,8 @@ export class AccessPage implements OnInit {
     this.sortBy.set(qr.sort?.field);
     this.sortDirection.set(qr.sort?.order ?? "ASC");
 
+    console.info("query data table", qr);
+
     this.loadData(qr.filters);
   }
 
@@ -89,6 +98,11 @@ export class AccessPage implements OnInit {
 
   public resolveRowAction(action: RowAction<Access>): void {
     console.info("row action", action);
+  }
+  public onFormSubmit(result: AccessResult): void {
+    console.info("process result", result);
+    this.accessForm.closeForm();
+    this.loadData();
   }
 
 }

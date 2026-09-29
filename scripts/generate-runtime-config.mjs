@@ -16,7 +16,7 @@ const env = Object.fromEntries(
     }),
 );
 
-if (!env.authorization_url) {
+if (!env.NG_APP_API_URL) {
   throw new Error('Missing authorization_url in .env');
 }
 

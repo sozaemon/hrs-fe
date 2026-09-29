@@ -9,7 +9,7 @@ export const columnDefinition: ColumnDefinitions<Access> = [
     allowSort: true,
     allowFilter: true,
     filterOptions: {
-      fieldType: "number"
+      fieldType: "string"
     }
   },
   {

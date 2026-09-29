@@ -3,15 +3,16 @@ import { inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { NzMessageService } from "ng-zorro-antd/message";
 import { catchError, throwError } from "rxjs";
-import { AUTHENTICATION_KEY } from "@app/core/auth/types/authentication-key";
+import { AuthService } from "@app/core/auth/service/auth.service";
 
 export const HttpErrorInterceptors: HttpInterceptorFn = (request: HttpRequest<unknown>, next: HttpHandlerFn) => {
 
   const router = inject(Router);
   const message = inject(NzMessageService);
+  const authService = inject(AuthService);
 
   const logOutAndReturnToLogin = () => {
-    localStorage.setItem(AUTHENTICATION_KEY.STORAGE_IS_AUTHENTICATED, "false");
+    authService.revokeAuthentication();
 
     if (router.url !== "/login") {
       router.navigate(["/login"], { queryParams: { returnUrl: router.url } });
@@ -37,11 +38,10 @@ export const HttpErrorInterceptors: HttpInterceptorFn = (request: HttpRequest<un
           case HttpStatusCode.BadGateway:
           case HttpStatusCode.ServiceUnavailable:
           case HttpStatusCode.GatewayTimeout:
-            if ([HttpStatusCode.BadGateway,
-            HttpStatusCode.ServiceUnavailable,
-            HttpStatusCode.GatewayTimeout,
-            HttpStatusCode.InternalServerError].includes(err.status) && !isLoginOrRefreshToken()) {
+            if ([HttpStatusCode.ServiceUnavailable, HttpStatusCode.GatewayTimeout].includes(err.status) && !isLoginOrRefreshToken()) {
               logOutAndReturnToLogin();
+              message.error(getErrorMessage(err));
+              return throwError(() => err);
             }
             message.error(getErrorMessage(err));
             console.error(`HTTP ${err.status} while requesting ${request.urlWithParams}`, err);

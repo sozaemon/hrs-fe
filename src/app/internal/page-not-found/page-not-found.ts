@@ -12,6 +12,6 @@ export class Page404 {
   private readonly router = inject(Router);
 
   returnToHome(): void {
-    this.router.navigateByUrl("/home")
+    this.router.navigateByUrl("/app/home")
   }
 }

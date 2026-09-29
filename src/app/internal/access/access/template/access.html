@@ -4,7 +4,7 @@
       <h2>Access permissions</h2>
       <p>View and manage the routes and API permissions configured for the workspace.</p>
     </div>
-    <button nz-button nzType="primary">Add Access</button>
+    <button nz-button nzType="primary" (click)="openAccessForm()">Add Access</button>
   </div>
 
   <data-table
@@ -20,4 +20,6 @@
     (doAction)="resolveRowAction($event)"
     >
   </data-table>
+  <!-- add access form modal here -->
+  <access-form (result)="onFormSubmit($event)"/>
 </nz-card>
