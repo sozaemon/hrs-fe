@@ -11,6 +11,8 @@ import { NzMessageService } from "ng-zorro-antd/message";
 import { format } from 'date-fns';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { FilterDefinitions } from "./type/data-table-filter.type";
+import { NzIconModule } from "ng-zorro-antd/icon";
+import { NzTooltipModule } from "ng-zorro-antd/tooltip";
 
 
 interface CommonOption {
@@ -30,7 +32,10 @@ type DisplayOption = "single-string" | "single-number" | "single-date" | "double
     NzButtonModule,
     NzTagModule,
     NzDatePickerModule,
-    NzModalModule,]
+    NzModalModule,
+    NzIconModule,
+    NzTooltipModule,
+  ]
 })
 export class DataTableFilterComponent implements OnInit {
 

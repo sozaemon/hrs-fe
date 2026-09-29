@@ -15,6 +15,7 @@ import { AccessForm, AccessResult } from "./components/access-form/access-form";
   imports: [DataTable, NzCardModule, NzButtonModule, AccessForm],
   templateUrl: "./template/access.html",
   styleUrl: "./css/access.css",
+  providers: [AccessService],
 })
 export class AccessPage implements OnInit {
 

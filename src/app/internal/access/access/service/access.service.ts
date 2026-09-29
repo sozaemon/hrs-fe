@@ -11,7 +11,7 @@ type PaginationAccess = PaginationResponse<Access>;
 type AccessPaginationResponse = HttpResponseBody<PaginationAccess>;
 type AccessResponse = HttpResponseBody<Access>;
 type RoleResponse = HttpResponseBody<Role[]>;
-@Injectable({ providedIn: "root" })
+@Injectable()
 export class AccessService implements PaginationInterface<Access> {
 
   private readonly client = inject(ServerClient);
