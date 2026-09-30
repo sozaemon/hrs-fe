@@ -1,8 +1,8 @@
-<nz-card nzTitle="Access Management" class="access-page-card">
-  <div class="access-page-header">
-    <div>
-      <h2>Access permissions</h2>
-      <p>View and manage the routes and API permissions configured for the workspace.</p>
+<nz-card nzTitle="Access Management" class="grid-row">
+  <div  class="flex flex-row justify-between">
+    <div class="grid-row">
+      <h2 class="text-lg font-semibold">Access permissions</h2>
+      <p class="text-sm">View and manage the routes and API permissions configured for the workspace.</p>
     </div>
     <button nz-button nzType="primary" (click)="openAccessForm()">Add Access</button>
   </div>
@@ -21,5 +21,9 @@
     >
   </data-table>
   <!-- add access form modal here -->
-  <access-form (result)="onFormSubmit($event)"/>
+  <access-form 
+    (result)="onFormSubmit($event)"
+    [access]="selectedAccess()"
+    [mode]="formMode()"
+    />
 </nz-card>

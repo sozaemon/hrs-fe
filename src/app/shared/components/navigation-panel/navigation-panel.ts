@@ -32,23 +32,33 @@ export class NavigationPanel implements OnInit {
   ngOnInit(): void {
 
     const navItems = this.mapRoutes(AppRoutes);
+    console.info(navItems);
     this.navigationItems.set(navItems);
   }
 
-  private mapRoutes(routesToMap: HrsRoutes): NavigationItems[] {
+  private mapRoutes(routesToMap: HrsRoutes, parentRoute: string = ""): NavigationItems[] {
     return routesToMap
       .filter((route) => route.path && !route.redirectTo)
-      .map((route) => ({
-        title: typeof route.title === "string" ? route.title : route.path,
-        url: route.path,
-        icon: route.icon,
-        children: route.children?.length ? this.mapRoutes(route.children) : []
-      }));
+      .map((route) => {
+
+        let urlRoute = [parentRoute, route.path].join("/");
+
+        if (!urlRoute.startsWith("app/")) {
+          urlRoute = "app" + urlRoute;
+        }
+        return {
+          title: typeof route.title === "string" ? route.title : route.path,
+          url: urlRoute,
+          icon: route.icon,
+          children: route.children?.length ? this.mapRoutes(route.children, [parentRoute, route.path].join("/")) : []
+        };
+
+      });
   }
 
   navigateToRoute(route?: string): void {
     if (route) {
-      this.router.navigate([route], { relativeTo: this.route });
+      this.router.navigate([route.trim()]);
     }
   }
 }

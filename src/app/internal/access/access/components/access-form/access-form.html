@@ -7,10 +7,9 @@
   <ng-container *nzModalContent>
     <div class="form-container">
       <dynamic-form-builder 
-      [config]="formConfig()" 
-      /* [showActions]="resolveShowActions()" */
+      [config]="formConfig()"
       [submitLabel]="resolveSubmitLabel()"
-      (submitted)="createAccess($any($event))"
+      (submitted)="onSubmit($any($event))"
       [showActions]=false
       />
     </div>

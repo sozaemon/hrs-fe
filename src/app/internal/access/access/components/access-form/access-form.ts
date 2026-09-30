@@ -1,9 +1,10 @@
-import { Component, inject, input, OnInit, output, signal, ViewChild, viewChild } from "@angular/core";
+import { Component, computed, inject, input, output, signal, ViewChild } from "@angular/core";
+import { DynamicFormBuilder } from "@app/shared/components/form-builder/form-builder.component";
+import { FormConfig } from "@app/shared/components/form-builder/types/types";
+import { NzModalModule } from "ng-zorro-antd/modal";
+import { NzNotificationService } from "ng-zorro-antd/notification";
 import { AccessService } from "../../service/access.service";
 import { Access } from "../../types/access.type";
-import { FormConfig } from "@app/shared/components/form-builder/types/types";
-import { DynamicFormBuilder } from "@app/shared/components/form-builder/form-builder.component";
-import { NzModalModule } from "ng-zorro-antd/modal";
 
 export type AccessResult = "success" | "failed";
 export type FormMode = "read" | "create" | "update";
@@ -14,22 +15,18 @@ export type FormMode = "read" | "create" | "update";
   imports: [DynamicFormBuilder, NzModalModule],
   styleUrl: "./access-form.css",
 })
-export class AccessForm implements OnInit {
+export class AccessForm {
 
   private readonly accessService = inject(AccessService);
+
+  private readonly notification = inject(NzNotificationService);
 
   public readonly mode = input<FormMode>("create");
   public readonly access = input<Access | undefined>(undefined);
   public readonly result = output<AccessResult>();
-  public readonly formConfig = signal<FormConfig>({ fields: [] });
-  public readonly displayForm = signal<boolean>(false);
 
-  public showAction: boolean = true;
-
-  @ViewChild(DynamicFormBuilder) dynamicFormBuilder!: DynamicFormBuilder;
-
-  ngOnInit(): void {
-    this.formConfig.set({
+  public readonly formConfig = computed<FormConfig>(() => {
+    return {
       fields: [
         {
           key: "name",
@@ -87,21 +84,18 @@ export class AccessForm implements OnInit {
               label: "DELETE",
               value: "DELETE",
             }
-          ]
-        },
-        {
-          key: "description",
-          type: "text",
-          label: "Description",
-          placeholder: "Insert Access Description",
-          value: this.access()?.description ?? undefined,
-          disabled: this.mode() === "read",
-          order: 4,
-        },
+          ],
+        }
       ],
       columns: 1,
-    });
-  }
+    };
+  });
+
+  public readonly displayForm = signal<boolean>(false);
+
+  public showAction: boolean = true;
+
+  @ViewChild(DynamicFormBuilder) dynamicFormBuilder!: DynamicFormBuilder;
 
   public openForm(): void {
     this.displayForm.set(true);
@@ -115,28 +109,52 @@ export class AccessForm implements OnInit {
     this.dynamicFormBuilder.submit();
   }
 
-  public createAccess(access: Access): void {
-    console.info("access", access);
-    this.accessService.createAccess(access)
-      .subscribe({
-        next: (r) => {
-          this.result.emit("success");
-        },
-        error: (er) => {
-          this.result.emit("failed");
-        }
-      });
+  public onSubmit(access: Access): void {
+
+    switch (this.mode()) {
+      case "create":
+        this.createAccess(access);
+        break;
+      case "update":
+        this.updateAccess(access);
+        break;
+      default:
+        this.closeForm();
+    }
   }
 
-  public onSubmit(access: Access): void {
+
+  private createAccess(access: Access): void {
     this.accessService.createAccess(access).subscribe({
       next: (r) => {
+        this.notification.info("Success", "Access Created");
         this.result.emit("success")
       },
-      error: (e) => {
+      error: (er) => {
+        let message = "unknown error";
+        if (er instanceof Error) {
+          message = er.message;
+        }
+        this.notification.error("Error", message);
         this.result.emit("failed");
       }
     })
+  }
+  private updateAccess(access: Access): void {
+    this.accessService.updateAccess(access).subscribe({
+      next: (r) => {
+        this.notification.info("Success", "Access Updated");
+        this.result.emit("success");
+      },
+      error: (er) => {
+        let message = "unknown error";
+        if (er instanceof Error) {
+          message = er.message;
+        }
+        this.notification.error("Error", message);
+        this.result.emit("failed");
+      }
+    });
   }
 
   public resolveShowActions(): boolean {

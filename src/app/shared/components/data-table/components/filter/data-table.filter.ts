@@ -268,7 +268,6 @@ export class DataTableFilterComponent implements OnInit {
                 this.operatorsModel["EQ"],
                 this.operatorsModel["NEQ"],
                 this.operatorsModel["LIKE"],
-                this.operatorsModel["NOT"],
                 this.operatorsModel["NOTNULL"],
               ];
               break;

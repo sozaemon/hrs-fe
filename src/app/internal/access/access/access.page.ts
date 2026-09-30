@@ -8,7 +8,8 @@ import { Access } from "@app/internal/access/access/types/access.type";
 import { ColumnAction, DataTableQuery, RowAction } from "@app/shared/components/data-table/types/data-table.types";
 import { columnDefinition } from "./types/column.definition";
 import { FilterRequest } from "@app/shared/components/data-table/types/filter-request.types";
-import { AccessForm, AccessResult } from "./components/access-form/access-form";
+import { AccessForm, AccessResult, FormMode } from "./components/access-form/access-form";
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 
 @Component({
@@ -18,6 +19,8 @@ import { AccessForm, AccessResult } from "./components/access-form/access-form";
   providers: [AccessService],
 })
 export class AccessPage implements OnInit {
+
+  private readonly notification = inject(NzNotificationService);
 
   readonly accessService = inject(AccessService);
   readonly accessData = signal<Access[]>([]);
@@ -31,6 +34,9 @@ export class AccessPage implements OnInit {
   readonly isLoading = signal<boolean>(false);
 
   readonly accessColumns = columnDefinition;
+
+  readonly selectedAccess = signal<Access | undefined>(undefined);
+  readonly formMode = signal<FormMode>("create");
 
   @ViewChild(AccessForm) accessForm!: AccessForm;
 
@@ -52,6 +58,8 @@ export class AccessPage implements OnInit {
       sortDirection: this.sortDirection(),
     }
 
+    this.isLoading.set(true);
+
     this.accessService.paginateList(request)
       .subscribe({
         next: (r) => {
@@ -60,6 +68,16 @@ export class AccessPage implements OnInit {
           this.page.set(r.data.page || 0);
           this.totalSize.set(r?.data.total || 0);
           this.pageSize.set(r?.data.size || 10);
+
+          this.isLoading.set(false);
+        },
+        error: (e) => {
+          let message = "unknown error";
+          if (e instanceof Error) {
+            message = e.message;
+          }
+          this.notification.error("Error", message);
+          this.isLoading.set(false);
         }
       });
   }
@@ -70,8 +88,6 @@ export class AccessPage implements OnInit {
     this.pageSize.set(qr.pageSize);
     this.sortBy.set(qr.sort?.field);
     this.sortDirection.set(qr.sort?.order ?? "ASC");
-
-    console.info("query data table", qr);
 
     this.loadData(qr.filters);
   }
@@ -94,11 +110,24 @@ export class AccessPage implements OnInit {
   }
 
   public resolveRowClick(access: Access): void {
+    // TODO right now is not used
     console.info("access", access);
   }
 
   public resolveRowAction(action: RowAction<Access>): void {
     console.info("row action", action);
+
+    this.selectedAccess.set(action.row);
+    switch (action.name) {
+      case "view":
+        this.formMode.set("read");
+        break;
+      case "edit":
+        this.formMode.set("update");
+        break;
+    }
+
+    this.openAccessForm();
   }
   public onFormSubmit(result: AccessResult): void {
     console.info("process result", result);

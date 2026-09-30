@@ -1,0 +1,23 @@
+<nz-card nzTitle="Role Access Management" class="grid-row">
+  <div class="flex flex-row justify-between">
+    <div class="grid-row">
+      <h2 class="text-lg font-semibold">Role Access</h2>
+      <p class="text-sm">View Assigned Access to Role</p>
+    </div>
+    <div>
+      <button nz-button nzType="primary">Add Role Access</button>
+    </div>
+  </div>
+  <data-table
+    [data]="roleAccessData()"
+    [columnDefinition]="roleAccessColumns"
+    [totalRecords]="totalSize()"
+    [page]="page()"
+    [pageSize]="pageSize()"
+    [showPagination]="true"
+    [allowRowSelect]="false"
+    (queryChange)="handleQueryChange($event)"
+  >
+
+  </data-table>
+</nz-card>
