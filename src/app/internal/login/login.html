@@ -1,47 +1,54 @@
-<main class="login-shell">
-  <section class="login-intro">
-    <div class="brand-lockup"><span class="brand-mark">H</span><strong>HRS workspace</strong></div>
-    <div class="intro-copy">
-      <p class="eyebrow">Human resources portal</p>
-      <h1 class="eyebrow">People operations, made clearer.</h1>
-      <p class="eyebrow">Bring your teams, time off, and everyday people workflows into one calm workspace.</p>
+<main class="flex items-center justify-center h-screen" style="background-image:url('login-image.jpg');background-size:cover">
+  <div class="flex items-center justify-center bg-sky-500/20 p-5 rounded-2xl">
+    <div class="grid grid-cols-2 bg-green-800 p-5 rounded-lg">
+      <section>
+        <div class="brand-lockup"><span class="brand-mark">H</span><p class="text-md font-extrabold text-black-900">HRS workspace</p></div>
+        <div class="w-80">
+          <p class="text-lg font-extrabold text-yellow-600">Human resources portal</p>
+          <p class="text-5xl/15 font-extrabold text-yellow-600">People operations, made clearer.</p>
+          <p class="text-lg font-extrabold text-indigo-300">Bring your teams, time off, and everyday people workflows into one calm workspace.</p>
+        </div>
+        <div class="intro-footer"><nz-icon nzType="check-circle" nzTheme="fill" /> Secure workspace access</div>
+      </section>
+      <section>
+        <nz-card [nzBordered]="false" class="h-full bg-green-300">
+          <p class="text-md text-yellow-800 font-bold">Welcome back</p>
+          <p class="font-bold">Sign in to your account</p>
+          <p>Use your work credentials to continue.</p>
+
+          <form nz-form (ngSubmit)="submit()" #loginForm="ngForm" nzLayout="vertical">
+            <nz-form-item>
+              <nz-form-label nzFor="username" nzRequired class="font-bold">Username</nz-form-label>
+              <nz-form-control nzErrorTip="Please enter your username">
+                <nz-input-wrapper>
+                  <nz-icon nzInputPrefix nzType="user" />
+                  <input nz-input id="username" name="username" [(ngModel)]="username" autocomplete="username" 
+                  required placeholder="Enter your username" />
+                </nz-input-wrapper>
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-label nzFor="password" nzRequired class="font-bold">Password</nz-form-label>
+              <nz-form-control nzErrorTip="Please enter your password">
+                <nz-input-wrapper>
+                  <nz-icon nzInputPrefix nzType="lock" />
+                  <input nz-input id="password" name="password" type="password" [(ngModel)]="password" autocomplete="current-password" required placeholder="Enter your password" />
+                </nz-input-wrapper>
+              </nz-form-control>
+            </nz-form-item>
+
+            @if (errorMessage()) {
+              <nz-alert nzType="error" [nzMessage]="errorMessage()" nzShowIcon></nz-alert>
+            }
+
+            <button nz-button nzType="primary" nzBlock type="submit" [nzLoading]="isSubmitting()" [disabled]="loginForm.invalid">
+              {{ isSubmitting() ? 'Signing in...' : 'Sign in' }}
+              @if (!isSubmitting()) { <nz-icon nzType="arrow-right" /> }
+            </button>
+          </form>
+        </nz-card>
+      </section>
     </div>
-    <div class="intro-footer"><nz-icon nzType="check-circle" nzTheme="fill" /> Secure workspace access</div>
-  </section>
-  <section class="login-panel" aria-labelledby="login-title">
-    <nz-card [nzBordered]="false">
-      <p class="eyebrow">Welcome back</p>
-      <h2 id="login-title">Sign in to your account</h2>
-      <p class="subtitle">Use your work credentials to continue.</p>
-
-      <form nz-form (ngSubmit)="submit()" #loginForm="ngForm">
-        <nz-form-item>
-          <nz-form-label nzFor="username" nzRequired>Username</nz-form-label>
-          <nz-form-control nzErrorTip="Please enter your username">
-            <nz-input-group nzPrefixIcon="user">
-              <input nz-input id="username" name="username" [(ngModel)]="username" autocomplete="username" required placeholder="Enter your username" />
-            </nz-input-group>
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label nzFor="password" nzRequired>Password</nz-form-label>
-          <nz-form-control nzErrorTip="Please enter your password">
-            <nz-input-group nzPrefixIcon="lock">
-              <input nz-input id="password" name="password" type="password" [(ngModel)]="password" autocomplete="current-password" required placeholder="Enter your password" />
-            </nz-input-group>
-          </nz-form-control>
-        </nz-form-item>
-
-        @if (errorMessage()) {
-          <nz-alert nzType="error" [nzMessage]="errorMessage()" nzShowIcon></nz-alert>
-        }
-
-        <button nz-button nzType="primary" nzBlock type="submit" [nzLoading]="isSubmitting()" [disabled]="loginForm.invalid">
-          {{ isSubmitting() ? 'Signing in...' : 'Sign in' }}
-          @if (!isSubmitting()) { <nz-icon nzType="arrow-right" /> }
-        </button>
-      </form>
-    </nz-card>
-  </section>
+  </div>
 </main>

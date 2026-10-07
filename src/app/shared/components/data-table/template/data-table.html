@@ -11,7 +11,7 @@
     (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
       <tr>
-        @if (rowSelectionEnabled()) {
+        @if (useRowsCheckbox()) {
           <th
             id="headerCheckbox"
             nzShowCheckbox
@@ -35,8 +35,8 @@
     </thead>
     <tbody>
       @for (row of data(); track row[rowKey()]) {
-        <tr>
-          @if (rowSelectionEnabled()) {
+        <tr (click)="handleRowClick(row)" (keyDown)="handleRowClick(row)">
+          @if (useRowsCheckbox()) {
             <td
               nzShowCheckbox
               [nzChecked]="rowContainSelectedRow(row)"
@@ -55,23 +55,19 @@
                     nzType="primary"
                     nzSize="small"
                     (click)="callAction(ac, row)"
-                    [style.backgroundColor]="ac.color ?? 'blue'"
+                    [ngClass]="ac.class ? ac.class : 'default-class'"
                     >
                     @if(ac.icon){
                       <nz-icon [nzType]="ac.icon" />
                     }
-                    @else{
-                      {{ac.label}}
-                    }
+                    {{ac.label}}
                   </button>
                 }
               </nz-space-compact>
             </td>
           }
-
         </tr>
       }
-      
     </tbody>
   </nz-table>
 </div>

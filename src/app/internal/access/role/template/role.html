@@ -1,0 +1,27 @@
+<nz-card nzTitle="Role Management" class="grid-row">
+  <div class="flex flex-row justify-between">
+    <div class="grid-row">
+      <h2 class="text-lg font-semibold">Role</h2>
+      <p class="text-sm">View and manage Role</p>
+    </div>
+    <button nz-button nzType="primary" (click)="openCreateRoleForm()">Add Role</button>
+  </div>
+
+  <data-table
+    [data]="roleData()"
+     [columnDefinition]="columnDef"
+     [totalRecords]="totalSize()"
+     [page]="page()"
+     [pageSize]="pageSize()"
+     [showPagination]="true"
+     [allowRowSelect]="true"
+     (queryChange)="handleQueryChange($event)"
+     (selectedRow)="handleRowClick($any($event))"
+  />
+  <role-form 
+  [mode]="formMode()"
+  [role]="role()"
+  (outputFlag)="handleFormResult($any($event))"
+  [(displayRoleForm)]="displayRoleForm"
+  />
+</nz-card>

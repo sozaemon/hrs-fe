@@ -1,10 +1,11 @@
-import { Component, computed, inject, input, output, signal, ViewChild } from "@angular/core";
+import { Component, computed, inject, input, model, output, ViewChild } from "@angular/core";
 import { DynamicFormBuilder } from "@app/shared/components/form-builder/form-builder.component";
 import { FormConfig } from "@app/shared/components/form-builder/types/types";
 import { NzModalModule } from "ng-zorro-antd/modal";
 import { NzNotificationService } from "ng-zorro-antd/notification";
 import { AccessService } from "../../service/access.service";
 import { Access } from "../../types/access.type";
+import { resolveHttpErrorMessage } from "@app/shared/utility/error-utility";
 
 export type AccessResult = "success" | "failed";
 export type FormMode = "read" | "create" | "update";
@@ -14,6 +15,7 @@ export type FormMode = "read" | "create" | "update";
   templateUrl: "./access-form.html",
   imports: [DynamicFormBuilder, NzModalModule],
   styleUrl: "./access-form.css",
+  providers: [AccessService]
 })
 export class AccessForm {
 
@@ -24,6 +26,7 @@ export class AccessForm {
   public readonly mode = input<FormMode>("create");
   public readonly access = input<Access | undefined>(undefined);
   public readonly result = output<AccessResult>();
+  public readonly displayAccessForm = model<boolean>(false);
 
   public readonly formConfig = computed<FormConfig>(() => {
     return {
@@ -85,24 +88,31 @@ export class AccessForm {
               value: "DELETE",
             }
           ],
-        }
+        },
+        {
+          key: "description",
+          type: "text",
+          label: "Description",
+          placeholder: "Access Description",
+          value: this.access()?.path ?? undefined,
+          disabled: this.mode() === "read",
+          order: 2,
+        },
       ],
       columns: 1,
     };
   });
-
-  public readonly displayForm = signal<boolean>(false);
 
   public showAction: boolean = true;
 
   @ViewChild(DynamicFormBuilder) dynamicFormBuilder!: DynamicFormBuilder;
 
   public openForm(): void {
-    this.displayForm.set(true);
+    this.displayAccessForm.set(true);
   }
 
   public closeForm(): void {
-    this.displayForm.set(false);
+    this.displayAccessForm.set(false);
   }
 
   public resolveOkFunction(): void {
@@ -116,6 +126,7 @@ export class AccessForm {
         this.createAccess(access);
         break;
       case "update":
+        access.id = this.access()?.id ?? 0;
         this.updateAccess(access);
         break;
       default:
@@ -131,6 +142,7 @@ export class AccessForm {
         this.result.emit("success")
       },
       error: (er) => {
+        console.error(er);
         let message = "unknown error";
         if (er instanceof Error) {
           message = er.message;
@@ -147,10 +159,7 @@ export class AccessForm {
         this.result.emit("success");
       },
       error: (er) => {
-        let message = "unknown error";
-        if (er instanceof Error) {
-          message = er.message;
-        }
+        const message = resolveHttpErrorMessage(er);
         this.notification.error("Error", message);
         this.result.emit("failed");
       }

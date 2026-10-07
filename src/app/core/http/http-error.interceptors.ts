@@ -15,7 +15,7 @@ export const HttpErrorInterceptors: HttpInterceptorFn = (request: HttpRequest<un
     authService.revokeAuthentication();
 
     if (router.url !== "/login") {
-      router.navigate(["/login"], { queryParams: { returnUrl: router.url } });
+      void router.navigate(["/login"], { queryParams: { returnUrl: router.url } });
     }
   }
 

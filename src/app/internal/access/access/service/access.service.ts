@@ -6,13 +6,13 @@ import { Access, Role } from "@app/internal/access/access/types/access.type";
 import { PaginationResponse } from "@app/shared/components/data-table/types/pagination-response";
 import { PaginationRequest } from "@app/shared/components/data-table/types/pagination-request";
 import { PaginationInterface } from "@app/shared/components/data-table/interface/pagination.interface";
-import { RoleAccess } from "../components/assign-access-form/role-access.type";
 
 type PaginationAccess = PaginationResponse<Access>;
 type AccessPaginationResponse = HttpResponseBody<PaginationAccess>;
 type AccessResponse = HttpResponseBody<Access>;
-type RoleResponse = HttpResponseBody<Role[]>;
-type RoleAccessResponse = HttpResponseBody<RoleAccess>;
+type PaginationRole = PaginationResponse<Role>;
+type RolePaginationResponse = HttpResponseBody<PaginationRole>;
+
 @Injectable()
 export class AccessService implements PaginationInterface<Access> {
 
@@ -31,12 +31,8 @@ export class AccessService implements PaginationInterface<Access> {
     return this.client.put<Access, Access>(`${this.apiUrl}/update`, request);
   }
 
-  roleList(): Observable<RoleResponse> {
-    return this.client.get("role/list");
-  }
-
-  assignAccess(request: RoleAccess): Observable<RoleAccessResponse> {
-    return this.client.post<RoleAccess, RoleAccess>("role-access/create", request);
+  roleList(request: PaginationRequest): Observable<RolePaginationResponse> {
+    return this.client.post("role/list", request);
   }
 
 }

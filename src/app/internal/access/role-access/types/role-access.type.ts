@@ -6,3 +6,8 @@ export interface RoleAccess extends Record<string, RecordType> {
   roleName?: string;
   accessName?: string;
 }
+
+export interface AssignRolesToAccessRequest {
+  accessId: number;
+  roleIds: number[];
+}

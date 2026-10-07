@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input, OnInit, output } from '@angular/core';
+import { Component, inject, input, OnInit, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilderService } from '@app/shared/components/form-builder/service/form-builder.service';
 import { FieldOption, FormConfig, FormField, FormSize } from '@app/shared/components/form-builder/types/types';

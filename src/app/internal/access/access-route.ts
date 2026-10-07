@@ -15,6 +15,11 @@ const routes: HrsRoutes = [
     title: "Role Access",
     path: "role-access",
     loadComponent: () => import("@app/internal/access/role-access/role-access.page").then((m) => m.RoleAccessPage)
+  },
+  {
+    title: "Role",
+    path: "role",
+    loadComponent: () => import("@app/internal/access/role/role.page").then((m) => m.RolePage)
   }
 
 ]

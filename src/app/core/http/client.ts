@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
+import { environment } from "environments/environment";
 import { Observable, throwError } from "rxjs";
 
 export interface HttpResponseBody<T> {
@@ -13,7 +14,7 @@ export type ValidRequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 @Injectable({ providedIn: "root" })
 export class ServerClient {
 
-  private readonly clientUrl = `${import.meta.env.NG_APP_API_URL}/api`;
+  private readonly clientUrl = `${environment.apiUrl}/api` //`${import.meta.env.NG_APP_API_URL}/api`;
   private readonly http = inject(HttpClient);
 
   private createBasicHeader(): HttpHeaders {

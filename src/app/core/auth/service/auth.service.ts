@@ -56,7 +56,9 @@ export class AuthService {
   }
 
   refreshToken(): Observable<HttpResponseBody<void>> {
-    return this.serverClient.post<{}, void>("auth/refresh-token").pipe(shareReplay({ bufferSize: 1, refCount: false }))
+    console.info("perform refresh token");
+    return this.serverClient.post<{}, void>("auth/refresh-token")
+      .pipe(shareReplay({ bufferSize: 1, refCount: false }))
   }
 
   private hasStoredSession(): boolean {

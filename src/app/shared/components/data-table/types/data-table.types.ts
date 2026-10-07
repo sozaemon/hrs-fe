@@ -15,7 +15,7 @@ export interface ColumnAction {
   name: string;
   icon?: string;
   label?: string;
-  color?: "orange" | "blue" | "green";
+  class?: string;
 }
 
 export interface RowAction<T> extends ColumnAction {

@@ -32,7 +32,6 @@ export class NavigationPanel implements OnInit {
   ngOnInit(): void {
 
     const navItems = this.mapRoutes(AppRoutes);
-    console.info(navItems);
     this.navigationItems.set(navItems);
   }
 

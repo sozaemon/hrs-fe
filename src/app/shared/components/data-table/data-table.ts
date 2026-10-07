@@ -12,9 +12,11 @@ import { NzSpaceCompactComponent } from "ng-zorro-antd/space";
 import { NzIconModule } from "ng-zorro-antd/icon";
 import { NzButtonModule } from "ng-zorro-antd/button";
 import { FilterDefinitions } from "./components/filter/type/data-table-filter.type";
+import { CommonModule } from "@angular/common";
 
 @Component({
   imports: [
+    CommonModule,
     NzTableModule,
     DataTableFilterComponent,
     NzSpaceCompactComponent,
@@ -168,5 +170,13 @@ export class DataTable<T extends Record<string, RecordType>> implements OnInit {
       row: row,
     }
     this.doAction.emit(rowAction);
+  }
+
+  public handleRowClick(row: T): void {
+
+    if (this.allowRowSelect()) {
+      this.selectedRow.emit([row]);
+    }
+
   }
 }

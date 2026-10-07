@@ -1,17 +1,22 @@
-<nz-modal [(nzVisible)]="formVisible" 
+<nz-modal [(nzVisible)]="displayAssignAccessForm" 
   (nzOnCancel)="closeForm()"
   (nzOnOk)="resolveOkFunction()"
   nzWidth="min(92vw, 640px)"
   nzTitle="Assign Access to Role"
 >
   <ng-container *nzModalContent>
-    <div>
-      <dynamic-form-builder 
-        [config]="formConfig()"
-        [submitLabel]="'Assign Access'"
-        (submitted)="createRoleAccess($any($event))"
-        [showActions]=false
-      />
+    @if(isLoading()){
+      <div>Load Data .....</div>
+    }
+    @else {
+      <div>
+        <nz-checkbox-group
+          [nzOptions]="roleOptions()"
+          [(ngModel)]="assignedRole"
+        />
     </div>
+    }
+    
   </ng-container>
 </nz-modal>
+
