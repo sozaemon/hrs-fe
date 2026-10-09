@@ -10,7 +10,7 @@ import { NzDatePickerModule } from "ng-zorro-antd/date-picker";
 import { NzMessageService } from "ng-zorro-antd/message";
 import { format } from 'date-fns';
 import { NzModalModule } from 'ng-zorro-antd/modal';
-import { FilterDefinitions } from "./type/data-table-filter.type";
+import { FilterDefinition } from "./type/data-table-filter.type";
 import { NzIconModule } from "ng-zorro-antd/icon";
 import { NzTooltipModule } from "ng-zorro-antd/tooltip";
 
@@ -41,11 +41,11 @@ export class DataTableFilterComponent implements OnInit {
 
   readonly message = inject(NzMessageService);
 
-  readonly filterDefinition = input.required<FilterDefinitions>();
+  readonly filterDefinition = input.required<{ filterDefinition: FilterDefinition[] }>();
 
   private readonly _filters = signal<{ [key: string]: FilterRequest }>({});
 
-  public filters = output<FilterRequest[]>();
+  public filters = output<{ filter: FilterRequest[] }>();
 
   public filterAbleColumnDef = signal<CommonOption[]>([]);
 
@@ -97,7 +97,7 @@ export class DataTableFilterComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    let filterableColumnDefs: CommonOption[] = this.filterDefinition()
+    let filterableColumnDefs: CommonOption[] = this.filterDefinition().filterDefinition
       .filter(f => f.allowFilter && f.filterOptions)
       .map((m) => {
         return {
@@ -239,7 +239,8 @@ export class DataTableFilterComponent implements OnInit {
   }
 
   private retrieveSelectedColumnDef(): ColumnDefinition<any> | null {
-    const selectedColumnDef: ColumnDefinitions<any> = this.filterDefinition().filter((f) => f.field == this.field());
+    const selectedColumnDef: ColumnDefinitions<any> = this.filterDefinition().filterDefinition
+      .filter((f) => f.field == this.field());
 
     if (selectedColumnDef.length > 0) {
       return selectedColumnDef[0];
@@ -293,7 +294,7 @@ export class DataTableFilterComponent implements OnInit {
 
   public applyFilter(): void {
     const filters = this.collectedFilters();
-    this.filters.emit(filters);
+    this.filters.emit({ filter: filters });
   }
 
   public resolveFilterTag(filter: FilterRequest): string {

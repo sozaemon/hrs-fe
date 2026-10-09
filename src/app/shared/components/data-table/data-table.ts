@@ -11,7 +11,7 @@ import { DataTableFilterComponent } from "@app/shared/components/data-table/comp
 import { NzSpaceCompactComponent } from "ng-zorro-antd/space";
 import { NzIconModule } from "ng-zorro-antd/icon";
 import { NzButtonModule } from "ng-zorro-antd/button";
-import { FilterDefinitions } from "./components/filter/type/data-table-filter.type";
+import { FilterDefinition } from "./components/filter/type/data-table-filter.type";
 import { CommonModule } from "@angular/common";
 
 @Component({
@@ -40,7 +40,7 @@ export class DataTable<T extends Record<string, RecordType>> implements OnInit {
   public readonly useRowsCheckbox = input<boolean>(false);
   public readonly actions = input<ColumnAction[]>([]);
 
-  public readonly filterDefinition = signal<FilterDefinitions>([]);
+  public readonly filterDefinition = signal<{ filterDefinition: FilterDefinition[] }>({ filterDefinition: [] });
 
   public pageIndex: number = 0;
   public size: number = 0;
@@ -64,15 +64,17 @@ export class DataTable<T extends Record<string, RecordType>> implements OnInit {
     this.size = this.pageSize();
     this.total = this.totalRecords();
 
-    const _filterDefinition: FilterDefinitions = this.columnDefinition().map((m) => {
-      return {
-        field: m.field,
-        header: m.header,
-        allowFilter: m.allowFilter,
-        filterOptions: m.filterOptions
-      }
-    })
-    this.filterDefinition.set(_filterDefinition);
+    const _filterDefinition: FilterDefinition[] = this.columnDefinition()
+      .filter((f) => f.allowFilter)
+      .map((m) => {
+        return {
+          field: m.field,
+          header: m.header,
+          allowFilter: m.allowFilter ?? false,
+          filterOptions: m.filterOptions
+        }
+      })
+    this.filterDefinition.set({ filterDefinition: _filterDefinition });
   }
 
   anyDataIsChecked(): boolean {
@@ -143,15 +145,15 @@ export class DataTable<T extends Record<string, RecordType>> implements OnInit {
     return column.columnFn ? column.columnFn(row) : row[column.field];
   }
 
-  readFilterData(filter: FilterRequest[]): void {
+  readFilterData(filter: { filter: FilterRequest[] }): void {
 
-    this.appliedFilter.set(filter);
+    this.appliedFilter.set(filter.filter);
 
     this.queryChange.emit({
       pageIndex: 1,
       pageSize: this.size,
       sort: undefined,
-      filters: filter
+      filters: filter.filter
     })
 
   }

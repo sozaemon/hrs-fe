@@ -1,5 +1,7 @@
 <div>
-  <data-table-filter [filterDefinition]="filterDefinition()" (filters)="readFilterData($event)"/>
+  <data-table-filter 
+    [filterDefinition]="filterDefinition()" 
+    (filters)="readFilterData($any($event))"/>
   <nz-table
     [nzData]="data()"
     [nzFrontPagination]="false"
