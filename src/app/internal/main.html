@@ -26,7 +26,18 @@
       </div>
     </nz-header>
     <nz-content class="app-content">
-      <router-outlet />
+      <nz-tabs
+        nzType="editable-card"
+        nzHideAdd
+        [nzSelectedIndex]="selectedTabIndex()"
+        (nzSelectedIndexChange)="selectTab($event)"
+        (nzClose)="disposeTab($event)">
+        @for(tab of tabs(); track tab.key){
+          <nz-tab [nzClosable]="tab.key !== homeTabKey" [nzTitle]="tab.name">
+            <ng-container *ngComponentOutlet="tab.component!"></ng-container>
+          </nz-tab>
+        }
+       </nz-tabs>
     </nz-content>
   </nz-layout>
 </nz-layout>

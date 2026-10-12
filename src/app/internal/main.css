@@ -19,7 +19,7 @@
 .user-summary strong { color: #193831; font-size: .8rem; }
 .user-summary span { color: #8a9995; font-size: .7rem; }
 .user-avatar { background: #d9a441; color: #193831; }
-.app-content { padding: clamp(1.25rem, 3vw, 2.5rem); background: #f5f8f7; }
+.app-content { padding: clamp(.75rem, 1.5vw, 1.25rem); background: #f5f8f7; }
 .content-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; max-width: 90rem; margin: 0 auto 2rem; }
 .content-heading h1 { margin: .7rem 0 .35rem; color: #193831; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 700; }
 .content-heading p { margin: 0; color: #71817c; }
