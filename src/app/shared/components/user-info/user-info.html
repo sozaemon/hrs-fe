@@ -1,10 +1,13 @@
 <div class="user-info">
-  <nz-avatar nzSize="small" nzText="A" class="user-avatar"></nz-avatar>
-  <div class="user-details">
+  <div nz-button nz-dropdown class="user-details" [nzDropdownMenu]="menu">
     <strong>{{ userName() || 'User' }}</strong>
-    <span>{{ userEmail() || 'No email available' }}</span>
+    <span>{{ userRole() || 'No role available' }}</span>
   </div>
-  <button nz-button nzType="text" nzDanger (click)="logOut()" aria-label="Sign out">
-    <nz-icon nzType="logout" />
-  </button>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu nzSelectable>
+      <li nz-menu-item><nz-icon nzType="user" /><span>User Info</span></li>
+      <li nz-menu-item><nz-icon nzType="lock" /><span>Change Password</span></li>
+      <li nz-menu-item (click)="logOut()" (keypress)="logOut()"><nz-icon nzType="logout" /><span>Sign Out</span></li>
+    </ul>
+  </nz-dropdown-menu>
 </div>

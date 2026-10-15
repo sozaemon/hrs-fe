@@ -2,12 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, shareReplay, tap } from 'rxjs';
 import { HttpResponseBody, ServerClient } from '@app/core/http/client';
 import { AUTHENTICATION_KEY } from '@app/core/auth/types/authentication-key';
-
-
-interface TokenResponse {
-  token?: string;
-  refreshToken?: string;
-}
+import { LoginRequest, Role, TokenResponse } from '../types/auth.type';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -21,15 +16,11 @@ export class AuthService {
     this.isAuthenticated.set(false);
   }
 
-  login(username: string, password: string): Observable<boolean> {
+  login(request: LoginRequest): Observable<boolean> {
+    console.info("login request", request);
 
-    let result: boolean = false;
-
-    return this.serverClient.post<{ userName: string, password: string }, TokenResponse>("auth/login", {
-      userName: username, password: password
-    }).pipe(
+    return this.serverClient.post<LoginRequest, TokenResponse>("auth/login", request).pipe(
       tap(e => {
-
         const token = e.data.token;
         if (token) {
           localStorage.setItem(AUTHENTICATION_KEY.STORAGE_IS_AUTHENTICATED, "true");
@@ -37,7 +28,6 @@ export class AuthService {
         } else {
           throw new Error("fail to fetch token")
         }
-
       }),
       map(m => true),
       catchError(e => {
@@ -45,6 +35,11 @@ export class AuthService {
       })
     );
 
+  }
+
+  getRole(request: LoginRequest): Observable<HttpResponseBody<Role[]>> {
+    console.info("ger role request", request);
+    return this.serverClient.post<LoginRequest, Role[]>("auth/user-roles", request);
   }
 
   logout(): Observable<HttpResponseBody<void>> {

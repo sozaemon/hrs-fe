@@ -1,0 +1,22 @@
+<nz-card nzTitle="Shift Management" class="grid-row">
+  <div class="flex flex-row justify-between">
+    <div class="grid-row">
+      <h2 class="text-lg font-semibold">Shift</h2>
+      <p class="text-sm">View and manage shift schedules and configuration.</p>
+    </div>
+  </div>
+
+  <data-table
+    [data]="shiftData()"
+    [columnDefinition]="shiftColumns"
+    [totalRecords]="totalSize()"
+    [page]="page()"
+    [pageSize]="pageSize()"
+    [showPagination]="true"
+    [allowRowSelect]="true"
+    [actions]="resolveActions()"
+    (queryChange)="handleQueryChange($event)"
+    (doAction)="resolveRowAction($event)"
+  >
+  </data-table>
+</nz-card>

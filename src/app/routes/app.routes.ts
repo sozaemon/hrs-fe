@@ -1,6 +1,7 @@
 import { Route } from '@angular/router';
 import { AccessRoutes } from '@app/internal/access/access-route';
 import { HomeRoutes } from '@app/internal/home/home-route';
+import { ShiftRoutes } from '@app/internal/shift/shift-route';
 
 export interface HrsRoute extends Route {
 	icon?: string;
@@ -12,6 +13,7 @@ export type HrsRoutes = HrsRoute[];
 export const AppRoutes: HrsRoutes = [
 	...HomeRoutes,
 	...AccessRoutes,
+	...ShiftRoutes,
 ]
 
 export const routes: HrsRoutes = [

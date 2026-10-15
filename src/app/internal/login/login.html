@@ -11,42 +11,73 @@
         <div class="intro-footer"><nz-icon nzType="check-circle" nzTheme="fill" /> Secure workspace access</div>
       </section>
       <section>
-        <nz-card [nzBordered]="false" class="h-full bg-green-300">
-          <p class="text-md text-yellow-800 font-bold">Welcome back</p>
-          <p class="font-bold">Sign in to your account</p>
-          <p>Use your work credentials to continue.</p>
-
+        <nz-card [nzBordered]="false" class="h-full bg-green-300 w-sm">
+          <div>
+            <p class="text-md text-yellow-800 font-bold">Welcome back</p>
+            <p class="font-bold">Sign in to your account</p>
+            <p>Use your work credentials to continue.</p>
+          </div>
+          <div>
+            <nz-steps [nzCurrent]="currentStep" class="my-8">
+              <nz-step nzTitle="User Login"  />
+              <nz-step nzTitle="Role"  />
+            </nz-steps>
+          </div>
           <form nz-form (ngSubmit)="submit()" #loginForm="ngForm" nzLayout="vertical">
-            <nz-form-item>
-              <nz-form-label nzFor="username" nzRequired class="font-bold">Username</nz-form-label>
-              <nz-form-control nzErrorTip="Please enter your username">
-                <nz-input-wrapper>
-                  <nz-icon nzInputPrefix nzType="user" />
-                  <input nz-input id="username" name="username" [(ngModel)]="username" autocomplete="username" 
-                  required placeholder="Enter your username" />
-                </nz-input-wrapper>
-              </nz-form-control>
-            </nz-form-item>
+            @if(currentStep == 0){
+                <nz-form-item>
+                  <nz-form-label nzFor="username" nzRequired class="font-bold">Username</nz-form-label>
+                  <nz-form-control nzErrorTip="Please enter your username">
+                    <nz-input-wrapper>
+                      <nz-icon nzInputPrefix nzType="user" />
+                      <input nz-input id="username" name="username" [(ngModel)]="username" autocomplete="username"
+                      required placeholder="Enter your username" aria-label="username"/>
+                    </nz-input-wrapper>
+                  </nz-form-control>
+                </nz-form-item>
 
-            <nz-form-item>
-              <nz-form-label nzFor="password" nzRequired class="font-bold">Password</nz-form-label>
-              <nz-form-control nzErrorTip="Please enter your password">
-                <nz-input-wrapper>
-                  <nz-icon nzInputPrefix nzType="lock" />
-                  <input nz-input id="password" name="password" type="password" [(ngModel)]="password" autocomplete="current-password" required placeholder="Enter your password" />
-                </nz-input-wrapper>
-              </nz-form-control>
-            </nz-form-item>
-
-            @if (errorMessage()) {
-              <nz-alert nzType="error" [nzMessage]="errorMessage()" nzShowIcon></nz-alert>
+                <nz-form-item>
+                  <nz-form-label nzFor="password" nzRequired class="font-bold">Password</nz-form-label>
+                  <nz-form-control nzErrorTip="Please enter your password">
+                    <nz-input-password>
+                      <nz-icon nzInputPrefix nzType="lock" />
+                      <input nz-input id="password" name="password" type="password" 
+                      [(ngModel)]="password" autocomplete="current-password" 
+                      required placeholder="Enter your password" aria-label="password"/>
+                    </nz-input-password>
+                  </nz-form-control>
+                </nz-form-item>
+                <button nz-button nzType="primary" [nzLoading]="isSubmitting()" type="button"
+                [disabled]="loginForm.invalid" (click)="loadRole()">
+                  Next
+                  @if (!isSubmitting()) { <nz-icon nzType="arrow-right" /> }
+                </button>
             }
-
-            <button nz-button nzType="primary" nzBlock type="submit" [nzLoading]="isSubmitting()" [disabled]="loginForm.invalid">
-              {{ isSubmitting() ? 'Signing in...' : 'Sign in' }}
-              @if (!isSubmitting()) { <nz-icon nzType="arrow-right" /> }
-            </button>
+            @else if(currentStep == 1){
+              <nz-form-item>
+                <nz-form-label nzFor="role" nzRequired class="font-bold">Role</nz-form-label>
+                <nz-form-control nzErrorTip="Please Select Role">
+                  <nz-select [ngModel]="role()" (ngModelChange)="role.set($event)"
+                    nzPlaceHolder="Select Role" name="role" required>
+                      @for(i of roles(); track i.code){
+                        <nz-option [nzValue]="i.name" [nzLabel]="i.description" />
+                      }
+                    </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+              <div class="flex flex-row justify-between">
+                <button nz-button nzType="primary" type="button" (click)="backToLogin()"><nz-icon nzType="arrow-left" />Back</button>
+                <button nz-button nzType="primary" type="submit" [nzLoading]="isSubmitting()" 
+                [disabled]="loginForm.invalid">
+                  {{ isSubmitting() ? 'Signing in...' : 'Sign in' }}
+                  @if (!isSubmitting()) { <nz-icon nzType="arrow-right" /> }
+                </button>
+              </div>
+              
+            }
           </form>
+          
+
         </nz-card>
       </section>
     </div>

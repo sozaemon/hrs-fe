@@ -1,0 +1,30 @@
+<nz-card nzTitle="Shift Tolerance Management" class="grid-row">
+  <div class="flex flex-row justify-between">
+    <div class="grid-row">
+      <h2 class="text-lg font-semibold">Shift Tolerance</h2>
+      <p class="text-sm">View and manage shift tolerance settings for shift configuration.</p>
+    </div>
+    <button nz-button nzType="primary" (click)="openCreateShiftToleranceForm()">Add Shift Tolerance</button>
+  </div>
+
+  <data-table
+    [data]="shiftToleranceData()"
+    [columnDefinition]="shiftToleranceColumns"
+    [totalRecords]="totalSize()"
+    [page]="page()"
+    [pageSize]="pageSize()"
+    [showPagination]="true"
+    [allowRowSelect]="true"
+    [actions]="rowAction"
+    (queryChange)="handleQueryChange($event)"
+    (doAction)="resolveRowAction($event)"
+  >
+  </data-table>
+  <shift-tolerance-form 
+    [mode]="formMode()"
+    [shiftTolerance]="selectedShiftTolerance()"
+    (outputFlag)="handleFormResult($event)"
+    [(displayShiftToleranceForm)]="displayShiftToleranceForm"
+
+  />
+</nz-card>

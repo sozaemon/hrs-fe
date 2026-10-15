@@ -1,0 +1,30 @@
+<nz-card nzTitle="Shift Type Management" class="grid-row">
+  <div  class="flex flex-row justify-between">
+    <div class="grid-row">
+      <h2 class="text-lg font-semibold">Shift Type</h2>
+      <p class="text-sm">View and Manage Shift Type for Shift configuration.</p>
+    </div>
+    <button nz-button nzType="primary" (click)="openCreateShiftTypeForm()">Add Shift Type</button>
+  </div>
+
+  <data-table
+    [data]="shiftTypeData()"
+    [columnDefinition]="columnDefinition"
+    [totalRecords]="totalSize()"
+    [page]="page()"
+    [pageSize]="pageSize()"
+    [showPagination]="true"
+    [allowRowSelect]="true"
+    [actions]="resolveActions()"
+    (queryChange)="handleQueryChange($event)"
+    (doAction)="resolveRowAction($event)"
+    >
+  </data-table>
+
+  <shift-type-form
+    [mode]="formMode()"
+    [shiftType]="selectedShiftType()"
+    (outputFlag)="handleFormResult($event)"
+    [(displayShiftTypeForm)]="displayShiftTypeForm"
+  />
+</nz-card>

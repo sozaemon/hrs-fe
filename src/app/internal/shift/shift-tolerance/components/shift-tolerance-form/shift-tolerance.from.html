@@ -1,0 +1,17 @@
+<nz-modal
+  [(nzVisible)]="displayShiftToleranceForm"
+  (nzOnCancel)="closeForm()"
+  (nzOnOk)="resolveOkFunction()"
+  nzWidth="min(92vw, 640px)"
+  nzTitle="Shift Tolerance Form"
+>
+  <ng-container *nzModalContent>
+    <div class="form-container">
+      <dynamic-form-builder
+        [config]="formConfig()"
+        (submitted)="onSubmit($any($event))"
+        [showActions]="false"
+      />
+    </div>
+  </ng-container>
+</nz-modal>

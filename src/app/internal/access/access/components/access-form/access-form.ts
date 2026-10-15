@@ -94,9 +94,9 @@ export class AccessForm {
           type: "text",
           label: "Description",
           placeholder: "Access Description",
-          value: this.access()?.path ?? undefined,
+          value: this.access()?.description ?? undefined,
           disabled: this.mode() === "read",
-          order: 2,
+          order: 4,
         },
       ],
       columns: 1,
@@ -153,6 +153,7 @@ export class AccessForm {
     })
   }
   private updateAccess(access: Access): void {
+    access.id = this.access()?.id ?? 0;
     this.accessService.updateAccess(access).subscribe({
       next: (r) => {
         this.notification.info("Success", "Access Updated");
