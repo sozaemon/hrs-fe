@@ -5,9 +5,25 @@
   </div>
   <nz-dropdown-menu #menu="nzDropdownMenu">
     <ul nz-menu nzSelectable>
-      <li nz-menu-item><nz-icon nzType="user" /><span>User Info</span></li>
-      <li nz-menu-item><nz-icon nzType="lock" /><span>Change Password</span></li>
-      <li nz-menu-item (click)="logOut()" (keypress)="logOut()"><nz-icon nzType="logout" /><span>Sign Out</span></li>
+      <li nz-menu-item (click)="displayProfile()" (keypress)="displayProfile()">
+        <nz-icon nzType="user" /><span>User Info</span>
+      </li>
+      <li nz-menu-item (click)="openChangePasswordPage()" (keypress)="openChangePasswordPage()">
+        <nz-icon nzType="lock" /><span>Change Password</span>
+      </li>
+      <li nz-menu-item (click)="logOut()" (keypress)="logOut()">
+        <nz-icon nzType="logout" /><span>Sign Out</span>
+      </li>
     </ul>
   </nz-dropdown-menu>
+  <nz-modal
+     [(nzVisible)]="displayUserInfo"
+    (nzOnCancel)="closeDisplayProfile()"
+    (nzOnOk)="closeDisplayProfile()"
+    nzTitle="User Info"
+  >
+    <ng-container *nzModalContent>
+      <data-view [viewModels]="dataViewModels()" [columnSize]="2" />
+    </ng-container>
+  </nz-modal>
 </div>

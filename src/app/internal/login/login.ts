@@ -13,11 +13,12 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { resolveHttpErrorMessage } from '@app/shared/utility/error-utility';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
+import { NzImageModule } from 'ng-zorro-antd/image';
 
 @Component({
   imports: [FormsModule, NzAlertModule, NzButtonModule, NzCardModule,
     NzFormModule, NzIconModule, NzInputModule, NzSelectModule,
-    NzStepsModule],
+    NzStepsModule, NzImageModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -39,8 +40,6 @@ export class Login {
   loadRole(): void {
 
     this.isSubmitting.set(true);
-
-    console.info("load role", this.username, this.password);
 
     this.authService.getRole({
       userName: this.username,

@@ -1,0 +1,13 @@
+<nz-card [nzBordered]="false" class="grid  gap-2 p-4 bg-gray-50 rounded-lg border border-gray-200"
+  >
+  <div [ngStyle]="getStyle()">
+    @for(model of viewModels(); track  model.key){
+    <div class="grid grid-row">
+      <span class="font-bold">{{model.label}}</span>
+      <span>{{model.value}}</span>
+    </div>
+  }
+  </div>
+  
+</nz-card>
+

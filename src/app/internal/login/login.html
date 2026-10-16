@@ -2,11 +2,10 @@
   <div class="flex items-center justify-center bg-sky-500/20 p-5 rounded-2xl">
     <div class="grid grid-cols-2 bg-green-800 p-5 rounded-lg">
       <section>
-        <div class="brand-lockup"><span class="brand-mark">H</span><p class="text-md font-extrabold text-black-900">HRS workspace</p></div>
-        <div class="w-80">
-          <p class="text-lg font-extrabold text-yellow-600">Human resources portal</p>
-          <p class="text-5xl/15 font-extrabold text-yellow-600">People operations, made clearer.</p>
-          <p class="text-lg font-extrabold text-indigo-300">Bring your teams, time off, and everyday people workflows into one calm workspace.</p>
+        <div class="w-80 flex flex-col justify-center">
+          <p class="text-lg font-extrabold text-yellow-600 text-center">Human resources portal</p>
+          <img nz-image nzSrc="/logo.png" alt="logo"/>
+          <p class="text-lg font-extrabold text-indigo-300 text-center">Bring your teams, time off, and everyday people workflows into one calm workspace.</p>
         </div>
         <div class="intro-footer"><nz-icon nzType="check-circle" nzTheme="fill" /> Secure workspace access</div>
       </section>
@@ -18,9 +17,9 @@
             <p>Use your work credentials to continue.</p>
           </div>
           <div>
-            <nz-steps [nzCurrent]="currentStep" class="my-8">
-              <nz-step nzTitle="User Login"  />
-              <nz-step nzTitle="Role"  />
+            <nz-steps [nzCurrent]="currentStep" class="my-8" nzSize="small">
+              <nz-step  nzIcon="user" />
+              <nz-step  nzIcon="info-circle" />
             </nz-steps>
           </div>
           <form nz-form (ngSubmit)="submit()" #loginForm="ngForm" nzLayout="vertical">
@@ -73,11 +72,8 @@
                   @if (!isSubmitting()) { <nz-icon nzType="arrow-right" /> }
                 </button>
               </div>
-              
             }
           </form>
-          
-
         </nz-card>
       </section>
     </div>

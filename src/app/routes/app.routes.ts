@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { authGuard } from '@app/core/auth/auth.guard';
 import { AccessRoutes } from '@app/internal/access/access-route';
 import { HomeRoutes } from '@app/internal/home/home-route';
 import { ShiftRoutes } from '@app/internal/shift/shift-route';
@@ -37,6 +38,11 @@ export const routes: HrsRoutes = [
 	{
 		path: 'login',
 		loadComponent: () => import('@app/internal/login/login').then((module) => module.Login),
+	},
+	{
+		canActivate: [authGuard],
+		path: "change-password",
+		loadComponent: () => import("app/internal/change-password/change-password").then((module) => module.ChangePassword),
 	},
 	{
 		path: '**',

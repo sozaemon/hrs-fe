@@ -16,6 +16,7 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzStatisticModule } from "ng-zorro-antd/statistic";
 import { PageSearch } from "@app/shared/components/page-search/page-search";
 import { AppTab } from "./main.type";
+import { NzImageModule } from 'ng-zorro-antd/image';
 
 @Component({
   imports: [
@@ -23,7 +24,7 @@ import { AppTab } from "./main.type";
     NzIconModule, NzLayoutModule, NzStatisticModule,
     UserInfo, NavigationPanel, NzTabsModule,
     PageSearch,
-    NgComponentOutlet
+    NgComponentOutlet, NzImageModule
   ],
   templateUrl: './main.html',
   styleUrl: './main.css',

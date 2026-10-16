@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { catchError, map, Observable, shareReplay, tap } from 'rxjs';
+import { catchError, map, Observable, of, shareReplay, tap } from 'rxjs';
 import { HttpResponseBody, ServerClient } from '@app/core/http/client';
 import { AUTHENTICATION_KEY } from '@app/core/auth/types/authentication-key';
 import { LoginRequest, Role, TokenResponse } from '../types/auth.type';
@@ -11,13 +11,14 @@ export class AuthService {
 
   private readonly serverClient = inject(ServerClient);
 
+  readonly isPerformingRefreshToken = signal<boolean>(false);
+
   revokeAuthentication(): void {
     localStorage.setItem(AUTHENTICATION_KEY.STORAGE_IS_AUTHENTICATED, "false");
     this.isAuthenticated.set(false);
   }
 
   login(request: LoginRequest): Observable<boolean> {
-    console.info("login request", request);
 
     return this.serverClient.post<LoginRequest, TokenResponse>("auth/login", request).pipe(
       tap(e => {
@@ -38,7 +39,7 @@ export class AuthService {
   }
 
   getRole(request: LoginRequest): Observable<HttpResponseBody<Role[]>> {
-    console.info("ger role request", request);
+
     return this.serverClient.post<LoginRequest, Role[]>("auth/user-roles", request);
   }
 
@@ -50,11 +51,19 @@ export class AuthService {
     );
   }
 
+
   refreshToken(): Observable<HttpResponseBody<void>> {
-    console.info("perform refresh token");
+
+    if (this.isPerformingRefreshToken()) {
+      return of();
+    }
+
+    this.isPerformingRefreshToken.set(true);
+
     return this.serverClient.post<{}, void>("auth/refresh-token")
       .pipe(shareReplay({ bufferSize: 1, refCount: false }))
   }
+  refreshTokenComplete(): void { this.isPerformingRefreshToken.set(false); }
 
   private hasStoredSession(): boolean {
     return typeof localStorage !== 'undefined' && localStorage.getItem(AUTHENTICATION_KEY.STORAGE_IS_AUTHENTICATED) === 'true';

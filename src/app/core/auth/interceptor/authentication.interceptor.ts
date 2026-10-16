@@ -35,7 +35,11 @@ export const AuthenticationInterceptor: HttpInterceptorFn = (request: HttpReques
           }
 
           return authService.refreshToken().pipe(
-            switchMap(() => next(clonedRequest)),
+            switchMap(() => {
+              authService.refreshTokenComplete();
+
+              return next(clonedRequest);
+            }),
             catchError(refreshError => {
               logOutAndReturnToLogin();
               return throwError(() => err);

@@ -96,8 +96,6 @@ export class RolePage implements OnInit {
   }
 
   public handleRowClick(roles: Role[]): void {
-    console.info("role row click", roles);
-
     if (roles.length) {
       this.role.set(roles[0]);
       this.formMode.set("update");

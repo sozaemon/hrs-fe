@@ -104,7 +104,7 @@ export class ShiftToleranceForm {
   }
 
   public closeForm(): void {
-    // no-op; controlled by parent binding when required
+    this.displayShiftToleranceForm.set(false);
   }
 
   public resolveOkFunction(): void {

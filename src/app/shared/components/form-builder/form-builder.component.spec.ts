@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { DynamicFormBuilderComponent } from '@app/shared/components/form-builder/form-builder.component';
+import { DynamicFormBuilder } from '@app/shared/components/form-builder/form-builder.component';
 
 describe('DynamicFormBuilderComponent', () => {
-  let fixture: ComponentFixture<DynamicFormBuilderComponent>;
-  let component: DynamicFormBuilderComponent;
+  let fixture: ComponentFixture<DynamicFormBuilder>;
+  let component: DynamicFormBuilder;
 
   const config = {
     columns: 2,
@@ -26,10 +26,10 @@ describe('DynamicFormBuilderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DynamicFormBuilderComponent],
+      imports: [DynamicFormBuilder],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DynamicFormBuilderComponent);
+    fixture = TestBed.createComponent(DynamicFormBuilder);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('config', config);
     fixture.componentRef.setInput('formSize', 'small');

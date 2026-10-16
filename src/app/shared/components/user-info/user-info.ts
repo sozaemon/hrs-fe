@@ -9,12 +9,24 @@ import { NzIconModule } from "ng-zorro-antd/icon";
 import { NzDropdownModule } from "ng-zorro-antd/dropdown";
 import { resolveHttpErrorMessage } from "@app/shared/utility/error-utility";
 import { NzNotificationService } from "ng-zorro-antd/notification";
+import { DataViewModels } from "../data-view/data-view.type";
+import { DataView } from "../data-view/data-view";
+import { NzModalModule } from "ng-zorro-antd/modal";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "user-info",
   templateUrl: './user-info.html',
   styleUrl: './user-info.css',
-  imports: [ɵNzTransitionPatchDirective, NzAvatarModule, NzButtonModule, NzIconModule, NzDropdownModule]
+  imports: [
+    ɵNzTransitionPatchDirective,
+    NzAvatarModule,
+    NzButtonModule,
+    NzIconModule,
+    NzDropdownModule,
+    DataView,
+    NzModalModule
+  ]
 })
 export class UserInfo implements OnInit {
   readonly userName = signal<string | null>(null);
@@ -26,33 +38,74 @@ export class UserInfo implements OnInit {
   readonly router = inject(Router);
   readonly notification = inject(NzNotificationService);
 
+  readonly displayUserInfo = signal<boolean>(false);
+  readonly dataViewModels = signal<DataViewModels>([]);
+
   ngOnInit(): void {
     this.loadUsername.set(true);
 
     this.userService.fetchUserData()
+      // .pipe(takeUntilDestroyed())
       .subscribe({
         next: (r) => {
           this.userName.set(r?.data.fullName || null);
           // this.userEmail.set(r?.data.email || null)
           this.loadUsername.set(false);
+
+          this.dataViewModels.set([
+            {
+              key: 1,
+              label: "Name",
+              value: r?.data.fullName || "-"
+            }, {
+              key: 2,
+              label: "Email",
+              value: r?.data.email || "-"
+            },
+            {
+              key: 3,
+              label: "Expiry Date",
+              value: r?.data.expiryDate || "-"
+            }
+          ])
         },
         error: (e) => {
           this.loadUsername.set(false);
         }
       })
-    this.userService.fetchRole().subscribe({
-      next: (r) => this.userRole.set(r?.data),
-      error: (e) => {
-        const msg = resolveHttpErrorMessage(e);
-        this.notification.error("Error", msg);
-      }
-    })
+    this.userService.fetchRole()
+      // .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: (r) => {
+          this.userRole.set(r?.data);
+          this.dataViewModels.update((current) =>
+            [...current, {
+              key: 4,
+              label: "Role",
+              value: r?.data || ""
+            }]
+          )
+        },
+        error: (e) => {
+          const msg = resolveHttpErrorMessage(e);
+          this.notification.error("Error", msg);
+        }
+      })
   }
 
   logOut(): void {
     this.authService.logout().subscribe(() => {
       void this.router.navigate(['/login']);
     });
+  }
+
+  displayProfile(): void {
+    this.displayUserInfo.set(true);
+  }
+  closeDisplayProfile(): void { this.displayUserInfo.set(false) }
+
+  openChangePasswordPage(): void {
+    void this.router.navigate(["/change-password"]);
   }
 
 }

@@ -57,7 +57,7 @@ export class NavigationPanel implements OnInit {
 
   navigateToRoute(route?: string): void {
     if (route) {
-      this.router.navigate([route.trim()]);
+      void this.router.navigate([route.trim()]);
     }
   }
 }

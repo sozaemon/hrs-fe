@@ -2,7 +2,12 @@
   <nz-sider nzCollapsible [nzTrigger]="null" [nzCollapsed]="isCollapsed()" nzWidth="200px" class="app-sidebar">
     <div class="brand" [class.brand-collapsed]="isCollapsed()">
       <span>
-        {{ isCollapsed() ? "H" : "HRS Workspace"}}
+        @if(isCollapsed()){
+           <img nz-image nzSrc="/favicon.ico" alt="icon" width="25px" height="25px"/> 
+        }@else {
+          HRS Workspace
+        }
+        <!-- {{ isCollapsed() ? "H" : "HRS Workspace"}} -->
       </span>
     </div>
     <nav-panel [isCollapse]="isCollapsed()" />

@@ -143,7 +143,7 @@ export class AccessPage implements OnInit {
     }
   }
   public onFormSubmit(result: AccessResult): void {
-    console.info("process result", result);
+
     this.accessForm.closeForm();
     this.page.set(1);
     this.loadData();

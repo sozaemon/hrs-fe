@@ -17,7 +17,7 @@ export class ShiftToleranceService implements PaginationInterface<ShiftTolerance
   }
 
   createShiftTolerance(request: ShiftTolerance): Observable<ShiftToleranceResponse> {
-    return this.client.post<ShiftTolerance, ShiftTolerance>(`${this.apiUrl}/crate`, request);
+    return this.client.post<ShiftTolerance, ShiftTolerance>(`${this.apiUrl}/create`, request);
   }
 
   updateShiftTolerance(request: ShiftTolerance): Observable<ShiftToleranceResponse> {
