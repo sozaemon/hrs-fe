@@ -42,6 +42,7 @@ export class ChangePassword {
   })
 
   updatePassword(): void {
+    console.info("values", this.changePasswordForm.value);
     if (this.changePasswordForm.valid) {
 
       const oldPassword: string = this.changePasswordForm.get("oldPassword")?.value;

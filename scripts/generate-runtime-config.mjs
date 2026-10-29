@@ -16,12 +16,5 @@ const env = Object.fromEntries(
     }),
 );
 
-if (!env.NG_APP_API_URL) {
-  throw new Error('Missing authorization_url in .env');
-}
 
 mkdirSync(dirname(outputPath), { recursive: true });
-writeFileSync(
-  outputPath,
-  `export const runtimeConfig = {\n  authorization_url: ${JSON.stringify(env.authorization_url)},\n} as const;\n`,
-);

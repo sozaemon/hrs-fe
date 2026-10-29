@@ -116,12 +116,12 @@ export class AccessPage implements OnInit {
         label: "Edit",
         class: "bg-orange-500"
       },
-      {
-        name: "assign",
-        label: "Assign Roles",
-        icon: "check-circle",
-        class: "bg-blue-500"
-      }
+      // {
+      //   name: "assign",
+      //   label: "Assign Roles",
+      //   icon: "check-circle",
+      //   class: "bg-blue-500"
+      // }
     ];
   }
 
@@ -136,9 +136,9 @@ export class AccessPage implements OnInit {
         this.formMode.set("update");
         this.openAccessForm();
         break;
-      case "assign":
-        this.displayAccessForm.set(true);
-        break;
+      // case "assign":
+      //   this.displayAccessForm.set(true);
+      //   break;
 
     }
   }

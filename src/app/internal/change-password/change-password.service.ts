@@ -7,6 +7,6 @@ export class ChangePasswordService {
   private readonly client = inject(ServerClient);
 
   changePassword(request: { oldPassword: string, newPassword: string }): Observable<HttpResponseBody<any>> {
-    return this.client.post<{ oldPassword: string, newPassword: string }, string>("user/update-password", request);
+    return this.client.patch<{ oldPassword: string, newPassword: string }, string>("user/update-password", request);
   }
 }

@@ -37,25 +37,6 @@ export class AssignAccessForm implements OnInit, OnChanges {
 
   public readonly assignedRole = signal<number[]>([]);
 
-  // public readonly formConfig = computed<FormConfig>(() => {
-  //   return {
-  //     fields: [
-  //       {
-  //         key: "roleId",
-  //         type: "select",
-  //         label: "Role",
-  //         placeholder: "Select Role",
-  //         validation: {
-  //           required: true,
-  //         },
-  //         order: 1,
-  //         options: this.roleOption()
-  //       }
-  //     ],
-  //     columns: 1,
-  //   };
-  // })
-
   ngOnChanges(changes: SimpleChanges<AssignAccessForm>): void {
     if (changes.access?.currentValue?.id) {
       const accessId = changes.access.currentValue?.id;

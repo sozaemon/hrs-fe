@@ -12,6 +12,18 @@
       (submitted)="onSubmit($any($event))"
       [showActions]=false
       />
+      <div>
+        @if(isLoading()){
+          <span>Load role data</span>
+        }@else {
+           <nz-checkbox-group
+            [nzDisabled]="mode() === 'read'"
+            [nzOptions]="roleOptions()"
+            [(ngModel)]="assignedRole" 
+            />
+        }
+       
+      </div>
     </div>
   </ng-container>
 </nz-modal>
