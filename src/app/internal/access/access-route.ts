@@ -20,6 +20,11 @@ const routes: HrsRoutes = [
     title: "Role",
     path: "role",
     loadComponent: () => import("@app/internal/access/role/role.page").then((m) => m.RolePage)
+  },
+  {
+    title: "Upload Role Access",
+    path: "upload-role-access",
+    loadComponent: () => import("@app/internal/access/upload-role-access/upload-role-access.page").then((m) => m.UploadRoleAccessPage)
   }
 
 ]

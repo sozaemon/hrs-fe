@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { environment } from "environments/environment";
 import { Observable, throwError } from "rxjs";
@@ -27,6 +27,15 @@ export class ServerClient {
     return headers;
   }
 
+  private createUploadHeader(): HttpHeaders {
+    // No Content-Type here: the browser must append the multipart boundary.
+    return new HttpHeaders({ 'Accept': 'application/json' });
+  }
+
+  private createDownloadHeader(): HttpHeaders {
+    return new HttpHeaders({ 'Accept': 'application/octet-stream' });
+  }
+
   request<T, R>(url: string, method?: ValidRequestMethod, headers?: HttpHeaders, body?: T, params?: HttpParams): Observable<HttpResponseBody<R | void>> {
     switch (method) {
       case "GET":
@@ -53,6 +62,24 @@ export class ServerClient {
     }
     return this.http.post<HttpResponseBody<R>>(`${this.clientUrl}/${url}`, request ?? {},
       { headers: header, withCredentials: true }
+    );
+  }
+
+  uploadFile<R>(url: string, formData: FormData, headers?: HttpHeaders): Observable<HttpResponseBody<R>> {
+    return this.http.post<HttpResponseBody<R>>(`${this.clientUrl}/${url}`, formData,
+      { headers: headers ?? this.createUploadHeader(), withCredentials: true }
+    );
+  }
+
+  downloadFile(url: string, params?: HttpParams, headers?: HttpHeaders): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${this.clientUrl}/${url}`,
+      {
+        params: params,
+        headers: headers ?? this.createDownloadHeader(),
+        observe: "response",
+        responseType: "blob",
+        withCredentials: true,
+      }
     );
   }
 

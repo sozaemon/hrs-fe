@@ -93,6 +93,13 @@ export class Main implements OnInit {
       return;
     }
 
+    const queryParamMap = pageRoute.queryParamMap;
+    const params: string = queryParamMap.keys
+      .flatMap((key) => queryParamMap.getAll(key).map((value) => `${key}:${value}`))
+      .sort()
+      .join("-");
+    const path: string = url.split(/[?#]/)[0];
+
     await this.loadHomeComponent();
     const currentTabs = this.tabs();
     const homeTab = currentTabs.find((tab) => tab.key === this.homeTabKey);
@@ -109,15 +116,18 @@ export class Main implements OnInit {
       return;
     }
 
-    const existingTab = otherTabs.some((tab) => tab.key === url);
+    const tabKey: string = params ? `${path}[${params}]` : path;
+    const routeName: string = pageRoute.title ?? component.name ?? url;
+
+    const existingTab = otherTabs.some((tab) => tab.key === tabKey);
     const nextOtherTabs = existingTab
-      ? otherTabs.map((tab) => ({ ...tab, active: tab.key === url }))
+      ? otherTabs.map((tab) => ({ ...tab, active: tab.key === tabKey }))
       : [
         ...otherTabs.map((tab) => ({ ...tab, active: false })),
         {
-          name: pageRoute.title ?? component.name ?? url,
+          name: params ? `${routeName}[${params}]` : routeName,
           component,
-          key: url,
+          key: tabKey,
           url,
           active: true,
         },
