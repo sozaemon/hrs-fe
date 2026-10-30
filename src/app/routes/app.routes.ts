@@ -6,6 +6,7 @@ import { ShiftRoutes } from '@app/internal/shift/shift-route';
 
 export interface HrsRoute extends Route {
 	icon?: string;
+	isHidden?: boolean;
 	children?: HrsRoutes;
 }
 

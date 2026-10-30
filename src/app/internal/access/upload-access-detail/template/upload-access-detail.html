@@ -1,0 +1,50 @@
+<nz-card nzTitle="Upload Access Detail" class="grid-row">
+  <div class="flex flex-row justify-between">
+    <div class="grid-row">
+      <h2 class="text-lg font-semibold">Uploaded Access Records</h2>
+      <p class="text-sm">
+        Review the records uploaded under header {{ headerId() ?? "-" }}. Fix the records flagged as
+        NOTVALID, then process the valid ones.
+      </p>
+    </div>
+    <button
+      nz-button
+      nzType="primary"
+      [nzLoading]="isProcessing()"
+      [disabled]="headerId() === undefined"
+      (click)="processValidRecords()">
+      Process Valid Records
+    </button>
+  </div>
+
+  <data-table
+    [data]="uploadedData()"
+    [columnDefinition]="columns"
+    [totalRecords]="totalSize()"
+    [page]="page()"
+    [pageSize]="pageSize()"
+    [loading]="isLoading()"
+    [showPagination]="true"
+    [allowRowSelect]="false"
+    [actions]="resolveActions()"
+    (queryChange)="handleQueryChange($event)"
+    (doAction)="resolveRowAction($event)">
+  </data-table>
+
+  <nz-modal
+    [nzVisible]="displayForm()"
+    nzTitle="Fix Uploaded Record"
+    nzWidth="min(92vw, 640px)"
+    (nzVisibleChange)="displayForm.set($event)"
+    (nzOnCancel)="closeForm()"
+    (nzOnOk)="submitForm()">
+    <ng-container *nzModalContent>
+      @if (displayForm()) {
+        <dynamic-form-builder
+          [config]="formConfig()"
+          [showActions]="false"
+          submitLabel="Save" />
+      }
+    </ng-container>
+  </nz-modal>
+</nz-card>

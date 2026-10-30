@@ -1,10 +1,11 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
+import { Router } from "@angular/router";
 import { NzButtonModule } from "ng-zorro-antd/button";
 import { NzCardModule } from "ng-zorro-antd/card";
 import { NzNotificationService } from "ng-zorro-antd/notification";
 import { NzUploadFile, NzUploadModule } from "ng-zorro-antd/upload";
 import { DataTable } from "@app/shared/components/data-table/data-table";
-import { DataTableQuery } from "@app/shared/components/data-table/types/data-table.types";
+import { ColumnAction, DataTableQuery, RowAction } from "@app/shared/components/data-table/types/data-table.types";
 import { FilterRequest } from "@app/shared/components/data-table/types/filter-request.types";
 import { PaginationRequest, SortDirection } from "@app/shared/components/data-table/types/pagination-request";
 import { resolveHttpErrorMessage } from "@app/shared/utility/error-utility";
@@ -21,6 +22,7 @@ export class UploadRoleAccessPage implements OnInit {
 
   private readonly uploadRoleAccessService = inject(UploadRoleAccessService);
   private readonly notification = inject(NzNotificationService);
+  private readonly router = inject(Router);
 
   readonly uploadedData = signal<UploadedRoleAccess[]>([]);
   readonly page = signal<number>(1);
@@ -36,8 +38,16 @@ export class UploadRoleAccessPage implements OnInit {
   readonly uploadedRoleAccessColumns = columnDefinition;
   readonly acceptedFileTypes = ".xlsx,.xls";
 
+  readonly actions: ColumnAction[] = [
+    { name: "detail", icon: "eye", label: "Detail", class: "bg-green-500" }
+  ];
+
   ngOnInit(): void {
     this.loadData();
+  }
+
+  resolveColumnAction():ColumnAction[]{
+    return this.actions;
   }
 
   downloadTemplate(): void {
@@ -72,6 +82,16 @@ export class UploadRoleAccessPage implements OnInit {
     this.sortDirection.set(query.sort?.order ?? "ASC");
 
     this.loadData(query.filters || []);
+  }
+
+  resolveRowAction(action: RowAction<UploadedRoleAccess>): void {
+    if (action.name !== "detail") {
+      return;
+    }
+
+    void this.router.navigate(["/app/access/upload-access-detail"], {
+      queryParams: { headerId: action.row.id },
+    });
   }
 
   private uploadTemplate(file: File): void {

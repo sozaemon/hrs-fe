@@ -48,7 +48,7 @@
           @for (column of columnDefinition(); track column.field) {
             <td>{{ renderCell(row, column) }}</td>
           }
-          @if(actions().length > 1){
+          @if(actions().length > 0){
             <td>
               <nz-space-compact>
                 @for(ac of actions(); track ac.name){

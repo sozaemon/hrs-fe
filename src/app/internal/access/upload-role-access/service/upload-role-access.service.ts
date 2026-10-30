@@ -19,13 +19,13 @@ export class UploadRoleAccessService implements PaginationInterface<UploadedRole
   }
 
   downloadTemplate(): Observable<HttpResponse<Blob>> {
-    return this.client.downloadFile(`${this.apiUrl}//upload/template`);
+    return this.client.downloadFile(`${this.apiUrl}/upload/template`);
   }
 
   uploadTemplate(file: File, description?: string): Observable<HttpResponseBody<UploadedRoleAccess[]>> {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("description", description ?? "");
+    formData.append("description", description ?? "test description");
 
     return this.client.uploadFile<UploadedRoleAccess[]>(`${this.apiUrl}/upload`, formData);
   }

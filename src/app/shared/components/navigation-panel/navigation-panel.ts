@@ -37,7 +37,7 @@ export class NavigationPanel implements OnInit {
 
   private mapRoutes(routesToMap: HrsRoutes, parentRoute: string = ""): NavigationItems[] {
     return routesToMap
-      .filter((route) => route.path && !route.redirectTo)
+      .filter((route) => route.path && !route.redirectTo && !route.isHidden)
       .map((route) => {
 
         let urlRoute = [parentRoute, route.path].join("/");

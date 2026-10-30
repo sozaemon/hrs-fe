@@ -28,7 +28,9 @@
     [pageSize]="pageSize()"
     [loading]="isLoading()"
     [showPagination]="true"
-    [allowRowSelect]="false"
-    (queryChange)="handleQueryChange($event)">
+    [allowRowSelect]="true"
+    [actions]="resolveColumnAction()"
+    (queryChange)="handleQueryChange($event)"
+    (doAction)="resolveRowAction($event)">
   </data-table>
 </nz-card>

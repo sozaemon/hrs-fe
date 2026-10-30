@@ -25,6 +25,12 @@ const routes: HrsRoutes = [
     title: "Upload Role Access",
     path: "upload-role-access",
     loadComponent: () => import("@app/internal/access/upload-role-access/upload-role-access.page").then((m) => m.UploadRoleAccessPage)
+  },
+  {
+    title: "Upload Access Detail",
+    path: "upload-access-detail",
+    isHidden: true,
+    loadComponent: () => import("@app/internal/access/upload-access-detail/upload-access-detail.page").then((m) => m.UploadAccessDetailPage)
   }
 
 ]
