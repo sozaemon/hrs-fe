@@ -19,14 +19,16 @@ export const HttpErrorInterceptors: HttpInterceptorFn = (request: HttpRequest<un
     }
   }
 
-  const isLoginOrRefreshToken = (): boolean => {
-    return request.url.includes("/refresh-token") || request.url.includes("/login");
-  }
-
   return next(request).pipe(
     catchError(err => {
       if (err instanceof HttpErrorResponse) {
         switch (err.status) {
+          case HttpStatusCode.BadGateway:
+          case HttpStatusCode.ServiceUnavailable:
+          case HttpStatusCode.GatewayTimeout:
+            logOutAndReturnToLogin();
+            message.error(getErrorMessage(err));
+            break;
           case HttpStatusCode.BadRequest:
           case HttpStatusCode.Forbidden:
           case HttpStatusCode.NotFound:
@@ -35,14 +37,6 @@ export const HttpErrorInterceptors: HttpInterceptorFn = (request: HttpRequest<un
           case HttpStatusCode.UnprocessableEntity:
           case HttpStatusCode.TooManyRequests:
           case HttpStatusCode.InternalServerError:
-          case HttpStatusCode.BadGateway:
-          case HttpStatusCode.ServiceUnavailable:
-          case HttpStatusCode.GatewayTimeout:
-            if ([HttpStatusCode.ServiceUnavailable, HttpStatusCode.GatewayTimeout].includes(err.status) && !isLoginOrRefreshToken()) {
-              logOutAndReturnToLogin();
-              message.error(getErrorMessage(err));
-              return throwError(() => err);
-            }
             message.error(getErrorMessage(err));
             console.error(`HTTP ${err.status} while requesting ${request.urlWithParams}`, err);
             break;

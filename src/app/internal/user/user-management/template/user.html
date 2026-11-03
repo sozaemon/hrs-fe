@@ -1,0 +1,28 @@
+<nz-card nzTitle="User Management" class="grid-row">
+  <div class="flex flex-row justify-between">
+    <div class="grid-row">
+      <h2 class="text-lg font-semibold">User</h2>
+      <p class="text-sm">View and manage application users.</p>
+    </div>
+    <button nz-button nzType="primary" (click)="openCreateUserForm()">Add User</button>
+  </div>
+
+  <data-table
+    [data]="userData()"
+    [columnDefinition]="userColumns"
+    [totalRecords]="totalSize()"
+    [page]="page()"
+    [pageSize]="pageSize()"
+    [loading]="isLoading()"
+    [showPagination]="true"
+    [actions]="rowAction"
+    (queryChange)="handleQueryChange($event)"
+    (doAction)="resolveRowAction($event)"
+  />
+  <user-form
+    [mode]="formMode()"
+    [user]="selectedUser()"
+    (outputFlag)="handleFormResult($any($event))"
+    [(displayUserForm)]="displayUserForm"
+  />
+</nz-card>

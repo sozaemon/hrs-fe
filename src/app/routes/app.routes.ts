@@ -3,6 +3,7 @@ import { authGuard } from '@app/core/auth/auth.guard';
 import { AccessRoutes } from '@app/internal/access/access-route';
 import { HomeRoutes } from '@app/internal/home/home-route';
 import { ShiftRoutes } from '@app/internal/shift/shift-route';
+import { UserRoutes } from '@app/internal/user/user-route';
 
 export interface HrsRoute extends Route {
 	icon?: string;
@@ -16,6 +17,7 @@ export const AppRoutes: HrsRoutes = [
 	...HomeRoutes,
 	...AccessRoutes,
 	...ShiftRoutes,
+	...UserRoutes,
 ]
 
 export const routes: HrsRoutes = [

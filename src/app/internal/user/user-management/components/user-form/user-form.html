@@ -1,0 +1,24 @@
+<nz-modal [(nzVisible)]="displayUserForm"
+  (nzOnCancel)="closeForm()"
+  (nzOnOk)="resolveOkFunction()"
+  nzWidth="min(92vw, 640px)"
+  nzTitle="User Form"
+>
+  <ng-container *nzModalContent>
+    <div class="form-container">
+      <dynamic-form-builder
+        [config]="formConfig()"
+        (submitted)="onSubmit($any($event))"
+        [showActions]="false"/>
+      @if (isRoleLoading()) {
+        <span>Load role data</span>
+      } @else {
+        <nz-checkbox-group
+          [nzDisabled]="mode() === 'view'"
+          [nzOptions]="roleOptions()"
+          [ngModel]="assignedRole()"
+          (ngModelChange)="assignedRole.set($event)"/>
+      }
+    </div>
+  </ng-container>
+</nz-modal>
