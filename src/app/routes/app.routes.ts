@@ -29,6 +29,7 @@ export const routes: HrsRoutes = [
 	{
 		path: "app",
 		loadComponent: () => import("@app/internal/main").then((m) => m.Main),
+		// canActivate:[AppGuard.authGuard],
 		children: [
 			{
 				path: "",
@@ -46,6 +47,10 @@ export const routes: HrsRoutes = [
 		canActivate: [authGuard],
 		path: "change-password",
 		loadComponent: () => import("app/internal/change-password/change-password").then((module) => module.ChangePassword),
+	},
+	{
+		path: "unauthorized",
+		loadComponent: () => import("@app/internal/unauthorized-page/unauthorized-page").then((module) => module.Page401)
 	},
 	{
 		path: '**',

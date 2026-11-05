@@ -14,6 +14,9 @@ import { resolveHttpErrorMessage } from '@app/shared/utility/error-utility';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzImageModule } from 'ng-zorro-antd/image';
+import { switchMap } from 'rxjs';
+import { PermissionMapping, permissions } from '@app/core/auth/permission/permission-mapping';
+import { PERMISSION_KEY } from '@app/core/auth/types/authentication-key';
 
 @Component({
   imports: [FormsModule, NzAlertModule, NzButtonModule, NzCardModule,
@@ -36,6 +39,8 @@ export class Login {
   readonly roles = signal<Role[]>([]);
 
   currentStep: number = 0;
+
+  private appPermission: PermissionMapping[] = permissions;
 
   loadRole(): void {
 
@@ -71,9 +76,24 @@ export class Login {
     try {
       this.authService
         .login({ userName: this.username, password: this.password, role: this.role() })
+        .pipe(
+          switchMap(() => this.authService.fetchPermission())
+        )
         .subscribe({
           next: (v) => {
             if (v) {
+
+              let acceptedPermission: string[] = [];
+
+              v.data.forEach((e) => {
+                const mappingByRole: PermissionMapping[] = this.appPermission.filter((f) => f.name == e.permission);
+                if (mappingByRole.length) {
+                  acceptedPermission.push(mappingByRole[0].code.trim());
+                }
+              })
+
+              localStorage.setItem(PERMISSION_KEY.STORAGE_USER_PERMISSION, acceptedPermission.join(","));
+
               const returnUrl = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || '/';
               void this.router.navigateByUrl(returnUrl.startsWith('/') ? returnUrl : '/home');
             }

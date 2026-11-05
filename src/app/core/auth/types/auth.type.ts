@@ -14,3 +14,9 @@ export interface TokenResponse {
   token?: string;
   refreshToken?: string;
 }
+
+export interface Permission {
+  id?: number;
+  roleCode: string;
+  permission: string;
+}

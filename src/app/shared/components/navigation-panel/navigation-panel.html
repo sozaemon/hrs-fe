@@ -11,18 +11,21 @@
         </ul>
       </li>
     } @else {
-      <li nz-menu-item (click)="navigateToRoute(navItem.url)" 
+      @if(validatePagePermission(navItem.url)){
+        <li nz-menu-item (click)="navigateToRoute(navItem.url)" 
         (keydown)="navigateToRoute(navItem.url)">
-        @if(navItem.icon){
-          <nz-icon [nzType]="navItem.icon" />
-        }
-        @else {
-          <nz-icon nzType="file" nzTheme="fill" />
-        }
-        @if(!isCollapse()){
-          <span>{{ navItem.title ?? 'No title' }}</span>
-        }
-      </li>
+          @if(navItem.icon){
+            <nz-icon [nzType]="navItem.icon" />
+          }
+          @else {
+            <nz-icon nzType="file" nzTheme="fill" />
+          }
+          @if(!isCollapse()){
+            <span>{{ navItem.title ?? 'No title' }}</span>
+          }
+        </li>
+      }
+      
     }
   } @empty {
     <li nz-menu-item nzDisabled>Navigation empty</li>
@@ -42,16 +45,20 @@
         </ul>
       </li>
     } @else {
-      <li nz-menu-item (click)="navigateToRoute(navItem.url)"
+
+      @if(validatePagePermission(navItem.url)){
+        <li nz-menu-item (click)="navigateToRoute(navItem.url)"
         (keydown)="navigateToRoute(navItem.url)">
-        @if(navItem.icon){
-          <nz-icon [nzType]="navItem.icon" nzTheme="outline" />
-        }
-        @else {
-          <nz-icon nzType="file" nzTheme="fill" />
-        }
-        <span>{{ navItem.title ?? "No title"}}</span>
-      </li>
+          @if(navItem.icon){
+            <nz-icon [nzType]="navItem.icon" nzTheme="outline" />
+          }
+          @else {
+            <nz-icon nzType="file" nzTheme="fill" />
+          }
+          <span>{{ navItem.title ?? "No title"}}</span>
+        </li>
+      }
+      
     }
   } @empty {
     <li nz-menu-item nzDisabled>Navigation empty</li>

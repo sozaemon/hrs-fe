@@ -1,4 +1,4 @@
-import { authGuard } from "@app/core/auth/auth.guard";
+import { permissionGuard } from "@app/core/auth/auth.guard";
 import { HrsRoutes } from "@app/routes/app.routes";
 
 const routes: HrsRoutes = [
@@ -20,7 +20,7 @@ export const UserRoutes: HrsRoutes = [
     icon: "team",
     title: "User",
     path: "user",
-    canActivate: [authGuard],
+    canActivate: [permissionGuard],
     loadComponent: () => import("@app/internal/user/user.main").then((module) => module.UserMain),
     children: routes
   }
