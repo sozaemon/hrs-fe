@@ -3,7 +3,6 @@ import { catchError, map, Observable, of, shareReplay, switchMap, tap } from 'rx
 import { HttpResponseBody, ServerClient } from '@app/core/http/client';
 import { AUTHENTICATION_KEY, PERMISSION_KEY } from '@app/core/auth/types/authentication-key';
 import { LoginRequest, Permission, Role, TokenResponse } from '../types/auth.type';
-import { PermissionMapping, permissions } from '../permission/permission-mapping';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

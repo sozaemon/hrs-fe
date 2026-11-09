@@ -23,7 +23,7 @@ export const permissions: PermissionMapping[] = [
   {
     code: "AC3",
     name: "access.upload-access",
-    url: "access/upload-role-access"
+    url: "access/upload-access"
   },
   {
     code: "AC4",
