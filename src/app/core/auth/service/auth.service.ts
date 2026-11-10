@@ -1,5 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { catchError, map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
+import { catchError, map, Observable, shareReplay, switchMap, tap } from 'rxjs';
+import { Router } from '@angular/router';
 import { HttpResponseBody, ServerClient } from '@app/core/http/client';
 import { AUTHENTICATION_KEY, PERMISSION_KEY } from '@app/core/auth/types/authentication-key';
 import { LoginRequest, Permission, Role, TokenResponse } from '../types/auth.type';
@@ -7,13 +8,24 @@ import { LoginRequest, Permission, Role, TokenResponse } from '../types/auth.typ
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
+  private readonly router = inject(Router);
   readonly isAuthenticated = signal(this.hasStoredSession());
   private readonly serverClient = inject(ServerClient);
   readonly isPerformingRefreshToken = signal<boolean>(false);
 
+  private refreshObservable$?: Observable<HttpResponseBody<void>>;
+
   revokeAuthentication(): void {
     localStorage.setItem(AUTHENTICATION_KEY.STORAGE_IS_AUTHENTICATED, "false");
     this.isAuthenticated.set(false);
+  }
+
+  logOutAndReturnToLogin(): void {
+    this.revokeAuthentication();
+
+    if (this.router.url !== "/login") {
+      void this.router.navigate(["/login"], { queryParams: { returnUrl: this.router.url } });
+    }
   }
 
   login(request: LoginRequest): Observable<boolean> {
@@ -61,17 +73,27 @@ export class AuthService {
 
   refreshToken(): Observable<HttpResponseBody<void>> {
 
-    if (this.isPerformingRefreshToken()) {
-      return of();
+    if (this.refreshObservable$) {
+      return this.refreshObservable$;
     }
 
     this.isPerformingRefreshToken.set(true);
 
-    return this.serverClient.post<{}, void>("auth/refresh-token")
-      .pipe(shareReplay({ bufferSize: 1, refCount: false }))
+    this.refreshObservable$ = this.serverClient.post<{}, void>("auth/refresh-token").pipe(
+      shareReplay({ bufferSize: 1, refCount: false }),
+      tap({ finalize: () => {
+        this.isPerformingRefreshToken.set(false);
+        this.refreshObservable$ = undefined;
+      } })
+    );
+
+    return this.refreshObservable$;
   }
 
-  refreshTokenComplete(): void { this.isPerformingRefreshToken.set(false); }
+  refreshTokenComplete(): void {
+    this.isPerformingRefreshToken.set(false);
+    this.refreshObservable$ = undefined;
+  }
 
   private hasStoredSession(): boolean {
     return typeof localStorage !== 'undefined' && localStorage.getItem(AUTHENTICATION_KEY.STORAGE_IS_AUTHENTICATED) === 'true';

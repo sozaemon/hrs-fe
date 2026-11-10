@@ -1,33 +1,26 @@
 import { HttpErrorResponse, HttpHandlerFn, HttpInterceptorFn, HttpRequest, HttpStatusCode } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { Router } from "@angular/router";
 import { NzMessageService } from "ng-zorro-antd/message";
 import { catchError, throwError } from "rxjs";
 import { AuthService } from "@app/core/auth/service/auth.service";
 
 export const HttpErrorInterceptors: HttpInterceptorFn = (request: HttpRequest<unknown>, next: HttpHandlerFn) => {
 
-  const router = inject(Router);
   const message = inject(NzMessageService);
   const authService = inject(AuthService);
-
-  const logOutAndReturnToLogin = () => {
-    authService.revokeAuthentication();
-
-    if (router.url !== "/login") {
-      void router.navigate(["/login"], { queryParams: { returnUrl: router.url } });
-    }
-  }
 
   return next(request).pipe(
     catchError(err => {
       if (err instanceof HttpErrorResponse) {
         switch (err.status) {
+          case HttpStatusCode.Unauthorized:
+            // Handled by AuthenticationInterceptor — do not process here
+            break;
           case HttpStatusCode.BadGateway:
           case HttpStatusCode.ServiceUnavailable:
           case HttpStatusCode.GatewayTimeout:
-            logOutAndReturnToLogin();
             message.error(getErrorMessage(err));
+            console.error(`HTTP ${err.status} while requesting ${request.urlWithParams}`, err);
             break;
           case HttpStatusCode.BadRequest:
           case HttpStatusCode.Forbidden:
@@ -41,7 +34,6 @@ export const HttpErrorInterceptors: HttpInterceptorFn = (request: HttpRequest<un
             console.error(`HTTP ${err.status} while requesting ${request.urlWithParams}`, err);
             break;
           case 0:
-            logOutAndReturnToLogin();
             message.error("Unable to connect to the server. Please try again.");
             console.error(`Network error while requesting ${request.urlWithParams}`, err);
             break;

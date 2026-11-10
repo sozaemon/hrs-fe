@@ -2,9 +2,7 @@
   (ngSubmit)="submit()" 
   [nzLayout]="'vertical'" 
   class="dynamic-form" novalidate>
-  <div class="dynamic-form-grid" 
-    [style.gridTemplateColumns]="'repeat(' + (config().columns ?? 1) + ', minmax(0, 1fr))'"
-    >
+  <div class="form-fields flex gap-2" [ngStyle]="getStyle()">
     @for (field of config().fields; track field.key) {
       <nz-form-item class="form-field">
         @if (field.label) {

@@ -10,8 +10,7 @@ import { NzCheckboxOption, NzCheckboxModule } from "ng-zorro-antd/checkbox";
 import { RoleAccess } from "@app/internal/access/role-access/types/role-access.type";
 import { RoleAccessService } from "@app/internal/access/role-access/service/role-access.service";
 import { PaginationRequest } from "@app/shared/components/data-table/types/pagination-request";
-import { catchError, Subscription, switchMap } from "rxjs";
-import { HttpErrorResponse } from "@angular/common/http";
+import { Subscription, switchMap } from "rxjs";
 import { FormsModule } from "@angular/forms";
 
 export type AccessResult = "success" | "failed";
@@ -108,20 +107,20 @@ export class AccessForm implements OnInit, OnChanges, OnDestroy {
           order: 4,
         },
       ],
-      columns: 1,
+      columns: 2,
     };
   });
 
   public showAction: boolean = true;
 
-  // role property 
-  public readonly roleOption = signal<FieldOption[]>([]);
+  // role property
   public readonly roleOptions = signal<NzCheckboxOption[]>([]);
   public readonly roleAccess = signal<RoleAccess[]>([]);
 
   public readonly assignedRole = signal<number[]>([]);
 
   public readonly isLoading = signal<boolean>(false);
+  public readonly isLoadingRoleAccess = signal<boolean>(false);
 
   @ViewChild(DynamicFormBuilder) dynamicFormBuilder!: DynamicFormBuilder;
 
@@ -139,45 +138,55 @@ export class AccessForm implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges<AccessForm>): void {
 
+    if (changes.displayAccessForm?.firstChange) {
+      return;
+    }
+
+    if (!changes.displayAccessForm?.currentValue) {
+      return;
+    }
+
+    if (this.mode() === "create" || !this.access()?.id) {
+      this.assignedRole.set([]);
+      return;
+    }
+
     this.assignedRole.set([]);
 
-    if (changes.access?.currentValue?.id) {
-
-      if (this.subscription) {
-        this.subscription.unsubscribe();
-      }
-
-      const accessId = changes.access.currentValue.id;
-
-      const roleAccessRequest: PaginationRequest = {
-        page: 1,
-        pageSize: 100,
-        filter: [
-          {
-            label: "Access ID",
-            fieldName: "accessId",
-            value: accessId,
-            operator: "EQ",
-            joinOperator: "AND"
-          }
-        ]
-      }
-
-      this.isLoading.set(true);
-
-      this.subscription = this.roleAccessService.paginateList(roleAccessRequest).subscribe({
-        next: (d) => {
-          this.roleAccess.set(d.data.data);
-          this.assignedRole.set(d.data.data.map((m) => m.roleId));
-          this.isLoading.set(false);
-        },
-        error: (e) => {
-          let message = resolveHttpErrorMessage(e);
-          this.notification.error("Error", message);
-          this.isLoading.set(false);
-        }
-      })
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
+
+    const accessId = this.access()!.id;
+
+    const roleAccessRequest: PaginationRequest = {
+      page: 1,
+      pageSize: 100,
+      filter: [
+        {
+          label: "Access ID",
+          fieldName: "accessId",
+          value: accessId,
+          operator: "EQ",
+          joinOperator: "AND"
+        }
+      ]
+    }
+
+    this.isLoadingRoleAccess.set(true);
+
+    this.subscription = this.roleAccessService.paginateList(roleAccessRequest).subscribe({
+      next: (d) => {
+        this.roleAccess.set(d.data.data);
+        this.assignedRole.set(d.data.data.map((m) => m.roleId));
+        this.isLoadingRoleAccess.set(false);
+      },
+      error: (e) => {
+        let message = resolveHttpErrorMessage(e);
+        this.notification.error("Error", message);
+        this.isLoadingRoleAccess.set(false);
+      }
+    })
   }
   ngOnInit(): void {
     this.loadRoles();
@@ -251,9 +260,6 @@ export class AccessForm implements OnInit, OnChanges, OnDestroy {
             accessId: accessId,
             roleIds: this.assignedRole(),
           })
-        }),
-        catchError((e) => {
-          throw new HttpErrorResponse(e);
         })
       )
       .subscribe({
@@ -283,9 +289,6 @@ export class AccessForm implements OnInit, OnChanges, OnDestroy {
             accessId: accessId,
             roleIds: this.assignedRole(),
           })
-        }),
-        catchError((e) => {
-          throw new HttpErrorResponse(e);
         })
       )
       .subscribe({

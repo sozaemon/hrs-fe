@@ -84,18 +84,18 @@
     nzTooltipTitle="Add Filter" 
     [nzTooltipPlacement]="['topLeft', 'leftTop']" nz-button nz-tooltip
     >
-    <nz-icon nzType="plus" nzTheme="outline" /></button>
+    <nz-icon nzType="plus" nzTheme="outline" />Filter</button>
   <button nz-button nzType="primary" (click)="clearFilter()" class="bg-orange-500"
     nzTooltipTitle="Clear Filter" 
     [nzTooltipPlacement]="['topLeft', 'leftTop']" nz-button nz-tooltip
   >
-    <nz-icon nzType="reload" nzTheme="outline" />
+    <nz-icon nzType="reload" nzTheme="outline" />Clear Filter
   </button>
   <button nz-button nzType="primary" (click)="applyFilter()" 
     nzTooltipTitle="Apply Filter" 
     [nzTooltipPlacement]="['topLeft', 'leftTop']" nz-button nz-tooltip
   >
-    <nz-icon nzType="check" nzTheme="outline" />
+    <nz-icon nzType="check" nzTheme="outline" />Apply Filter
   </button>
   <div class="tags-holder">
     @for(fl of collectedFilters(); track fl.fieldName){

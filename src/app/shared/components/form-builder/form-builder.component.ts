@@ -134,4 +134,13 @@ export class DynamicFormBuilder implements OnInit {
         .map((field) => [field.key, field.options ?? []]),
     );
   }
+
+  getStyle() {
+    return {
+      display: "grid",
+      "grid-template-columns": `repeat(${this.config().columns ?? 1}, 1fr)`,
+      'justify-items': 'left',
+      margin: "5px"
+    }
+  }
 }
