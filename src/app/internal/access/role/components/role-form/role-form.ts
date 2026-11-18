@@ -6,12 +6,13 @@ import { FormConfig } from "@app/shared/components/form-builder/types/types";
 import { DynamicFormBuilder } from "@app/shared/components/form-builder/form-builder.component";
 import { resolveHttpErrorMessage } from "@app/shared/utility/error-utility";
 import { NzModalModule } from "ng-zorro-antd/modal";
+import { NzButtonModule } from "ng-zorro-antd/button";
 
 @Component({
   selector: "role-form",
   templateUrl: "./role-form.html",
   providers: [RoleService],
-  imports: [NzModalModule, DynamicFormBuilder]
+  imports: [NzModalModule, DynamicFormBuilder, NzButtonModule]
 })
 export class RoleForm {
   private readonly roleService = inject(RoleService);

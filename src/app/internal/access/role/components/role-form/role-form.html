@@ -12,4 +12,11 @@
         [showActions]="false"/>
     </div>
   </ng-container>
+  <div *nzModalFooter >
+    <button nz-button [nzType]="'default'" (click)="closeForm()">{{mode() === "view" ? "Close" : "Cancel"}}</button>
+    @if(mode() !== "view"){
+      <button nz-button [nzType]="'primary'" [nzLoading]="isLoading()" 
+      (click)="resolveOkFunction()">{{mode() === "create" ? "Create" : "Update"}}</button>
+    }
+  </div>
 </nz-modal>

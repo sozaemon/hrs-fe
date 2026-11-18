@@ -4,17 +4,27 @@
       <h2 class="text-lg font-semibold">Uploaded Access Records</h2>
       <p class="text-sm">
         Review the records uploaded under header {{ headerId() ?? "-" }}. Fix the records flagged as
-        NOTVALID, then process the valid ones.
+        NOT VALID, then process the valid ones.
       </p>
     </div>
-    <button
-      nz-button
-      nzType="primary"
-      [nzLoading]="isProcessing()"
-      [disabled]="headerId() === undefined"
-      (click)="processValidRecords()">
-      Process Valid Records
-    </button>
+    <div class="flex flex-row gap-2">
+      <button
+        nz-button
+        nzType="primary"
+        [nzLoading]="isProcessing()"
+        [disabled]="headerId() === undefined"
+        (click)="processValidRecords()">
+        Process Valid Records
+      </button>
+      <button
+        nz-button
+        nzType="primary"
+        [disabled]="!selectedRecord()"
+        (click)="displayUpdateForm()">
+        Update Record
+      </button>
+    </div>
+   
   </div>
 
   <data-table
@@ -25,10 +35,9 @@
     [pageSize]="pageSize()"
     [loading]="isLoading()"
     [showPagination]="true"
-    [allowRowSelect]="false"
-    [actions]="resolveActions()"
+    [allowRowSelect]="true"
     (queryChange)="handleQueryChange($event)"
-    (doAction)="resolveRowAction($event)">
+    (selectedRow)="onSelectedRecord($event)">
   </data-table>
 
   <nz-modal

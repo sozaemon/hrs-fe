@@ -12,6 +12,7 @@ import { RoleAccessService } from "@app/internal/access/role-access/service/role
 import { PaginationRequest } from "@app/shared/components/data-table/types/pagination-request";
 import { Subscription, switchMap } from "rxjs";
 import { FormsModule } from "@angular/forms";
+import { NzButtonModule } from "ng-zorro-antd/button";
 
 export type AccessResult = "success" | "failed";
 export type FormMode = "read" | "create" | "update";
@@ -19,7 +20,7 @@ export type FormMode = "read" | "create" | "update";
 @Component({
   selector: "access-form",
   templateUrl: "./access-form.html",
-  imports: [DynamicFormBuilder, NzModalModule, NzCheckboxModule, FormsModule],
+  imports: [DynamicFormBuilder, NzModalModule, NzCheckboxModule, FormsModule, NzButtonModule],
   styleUrl: "./access-form.css",
   providers: [AccessService, RoleAccessService]
 })

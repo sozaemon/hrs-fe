@@ -1,7 +1,9 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { NzButtonModule } from "ng-zorro-antd/button";
 import { NzCardModule } from "ng-zorro-antd/card";
+import { NzInputModule } from "ng-zorro-antd/input";
 import { NzNotificationService } from "ng-zorro-antd/notification";
 import { NzUploadFile, NzUploadModule } from "ng-zorro-antd/upload";
 import { DataTable } from "@app/shared/components/data-table/data-table";
@@ -12,11 +14,12 @@ import { resolveHttpErrorMessage } from "@app/shared/utility/error-utility";
 import { UploadRoleAccessService } from "./service/upload-role-access.service";
 import { columnDefinition } from "./types/column-definition";
 import { UploadedRoleAccess } from "./types/upload-role-access.type";
+import { NzModalModule } from "ng-zorro-antd/modal";
 
 @Component({
   templateUrl: "./template/upload-role-access.html",
   providers: [UploadRoleAccessService],
-  imports: [NzCardModule, NzButtonModule, NzUploadModule, DataTable],
+  imports: [NzCardModule, NzButtonModule, NzInputModule, NzUploadModule, FormsModule, DataTable, NzModalModule],
 })
 export class UploadRoleAccessPage implements OnInit {
 
@@ -35,8 +38,13 @@ export class UploadRoleAccessPage implements OnInit {
   readonly isDownloading = signal<boolean>(false);
   readonly isUploading = signal<boolean>(false);
 
+  readonly description = signal<string>("");
+
   readonly uploadedRoleAccessColumns = columnDefinition;
   readonly acceptedFileTypes = ".xlsx,.xls";
+  readonly displayUploadForm = signal<boolean>(false)
+
+  readonly fileList = signal<NzUploadFile[]>([]);
 
   readonly actions: ColumnAction[] = [
     { name: "detail", icon: "eye", label: "Detail", class: "bg-green-500" }
@@ -46,7 +54,7 @@ export class UploadRoleAccessPage implements OnInit {
     this.loadData();
   }
 
-  resolveColumnAction():ColumnAction[]{
+  resolveColumnAction(): ColumnAction[] {
     return this.actions;
   }
 
@@ -69,11 +77,37 @@ export class UploadRoleAccessPage implements OnInit {
     });
   }
 
+  displayUploadFormToggle(): void {
+    this.resetUploadForm();
+    this.displayUploadForm.set(!this.displayUploadForm());
+  }
+
+  resetUploadForm(): void {
+    this.fileList.set([]);
+    this.description.set("");
+  }
+
+  closeUploadForm(): void {
+    this.displayUploadForm.set(false);
+  }
+
   readonly beforeUpload = (file: NzUploadFile): boolean => {
-    const rawFile = file.originFileObj ?? (file as unknown as File);
-    this.uploadTemplate(rawFile);
+    this.fileList.set([file]);
+    // const rawFile = file.originFileObj ?? (file as unknown as File);
+    // this.uploadTemplate(rawFile, this.description());
     return false;
   };
+
+  doUploadFile(): void {
+    if (this.fileList().length === 0) {
+      this.notification.warning("Warning", "Please select a file to upload.");
+      return;
+    }
+
+    const rawFile = this.fileList()[0]?.originFileObj ?? (this.fileList()[0] as unknown as File);
+
+    this.uploadTemplate(rawFile, this.description());
+  }
 
   handleQueryChange(query: DataTableQuery<UploadedRoleAccess>): void {
     this.page.set(query.pageIndex);
@@ -94,19 +128,23 @@ export class UploadRoleAccessPage implements OnInit {
     });
   }
 
-  private uploadTemplate(file: File): void {
+  private uploadTemplate(file: File, description?: string): void {
     if (this.isUploading()) {
       return;
     }
 
     this.isUploading.set(true);
 
-    this.uploadRoleAccessService.uploadTemplate(file).subscribe({
+    this.uploadRoleAccessService.uploadTemplate(file, description).subscribe({
       next: () => {
         this.isUploading.set(false);
         this.notification.success("Success", "Role access template uploaded successfully.");
+        this.description.set("");
         this.page.set(1);
         this.loadData();
+
+        this.resetUploadForm();
+        this.closeUploadForm();
       },
       error: (e) => {
         this.isUploading.set(false);

@@ -1,6 +1,6 @@
 <nz-modal [(nzVisible)]="displayAccessForm"
   (nzOnCancel)="closeForm()"
-  (nzOnOk)="resolveOkFunction()"
+  /* (nzOnOk)="resolveOkFunction()" */
   nzWidth="min(92vw, 640px)"
   nzTitle="Access Form"
 >
@@ -26,4 +26,11 @@
       </div>
     </div>
   </ng-container>
+  <div *nzModalFooter >
+    <button nz-button [nzType]="'default'" (click)="closeForm()">{{mode() === "read" ? "Close" : "Cancel"}}</button>
+    @if(mode() !== "read"){
+      <button nz-button [nzType]="'primary'" [nzLoading]="isLoading()" 
+      (click)="resolveOkFunction()">{{mode() === "create" ? "Create" : "Update"}}</button>
+    }
+  </div>
 </nz-modal>

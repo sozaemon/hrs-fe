@@ -127,7 +127,12 @@ export class UploadAccessDetailPage implements OnInit {
       });
   }
 
-  public resolveActions(): ColumnAction[]{
+  public resolveActions(data: UploadAccessDetail): ColumnAction[] {
+
+    console.info("render column actions");
+    if (data.uploadStatus === "COMPLETED") {
+      return [];
+    }
     return this.actions
   }
 
@@ -140,19 +145,6 @@ export class UploadAccessDetailPage implements OnInit {
     this.loadData(query.filters || []);
   }
 
-  resolveRowAction(action: RowAction<UploadAccessDetail>): void {
-    if (action.name !== "edit") {
-      return;
-    }
-
-    if (action.row.uploadStatus !== "NOTVALID") {
-      this.notification.info("Info", "Only records that failed validation can be updated.");
-      return;
-    }
-
-    this.selectedRecord.set(action.row);
-    this.displayForm.set(true);
-  }
 
   closeForm(): void {
     this.displayForm.set(false);
@@ -246,5 +238,18 @@ export class UploadAccessDetailPage implements OnInit {
         this.isLoading.set(false);
       },
     });
+  }
+
+  onSelectedRecord(record: UploadAccessDetail[]): void {
+    if (record.length > 0) {
+      this.selectedRecord.set(record[0]);
+    }
+  }
+
+  displayUpdateForm(): void {
+    if (this.selectedRecord()) {
+      this.displayForm.set(true);
+    }
+
   }
 }

@@ -6,8 +6,6 @@ import { NzButtonModule } from "ng-zorro-antd/button";
 
 @Component({
   imports: [NzCardModule, NzButtonModule, NzLayoutComponent, NzLayoutModule, RouterOutlet],
-  //templateUrl: "./template/access.html",
-  // styleUrl: "./css/access.css",
   template: `<nz-layout>
               <nz-content>
                 <router-outlet />

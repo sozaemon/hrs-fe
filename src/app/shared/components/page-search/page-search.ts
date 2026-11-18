@@ -3,6 +3,8 @@ import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
 import { AppRoutes, HrsRoutes } from "@app/routes/app.routes";
 import { NzSelectComponent, NzOptionComponent } from "ng-zorro-antd/select";
+import { AuthService } from "@app/core/auth/service/auth.service";
+import { PermissionMapping, permissions } from "@app/core/auth/permission/permission-mapping";
 
 interface MenuItem {
   label: string;
@@ -17,6 +19,7 @@ type MenuItems = MenuItem[];
 export class PageSearch implements OnInit {
 
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
   private readonly allMenuItems = signal<MenuItems>([]);
 
@@ -26,11 +29,28 @@ export class PageSearch implements OnInit {
 
   public readonly filterFn = signal<boolean>(true);
 
+  readonly appPermission = permissions;
+
   @ViewChild("pageSearch") pageSearchSelect!: NzSelectComponent;
 
   ngOnInit(): void {
     const menuItems = this.mapMenuItem(AppRoutes);
     this.allMenuItems.set(menuItems);
+  }
+
+  validatePagePermission(pageUrl?: string): boolean {
+
+    // exclude home
+    if (pageUrl === "app/home" || pageUrl === "app/home/dashboard") {
+      return true;
+    }
+    const userPermission: string[] = this.authService.getPermission();
+    const permissionMapping: PermissionMapping[] = this.appPermission.filter((f) => `app/${f.url}` === pageUrl);
+    if (permissionMapping.length) {
+      return userPermission.includes(permissionMapping[0].code);
+    }
+
+    return false;
   }
 
   private mapMenuItem(routeToMap: HrsRoutes, path?: string): MenuItems {
@@ -41,11 +61,19 @@ export class PageSearch implements OnInit {
       if (!i.path || i.redirectTo) {
         continue;
       }
+
+      if (i.isHidden) {
+        continue;
+      }
       let currentPath = path ? `${path}/${i.path}` : i.path;
       if (i.children?.length) {
         const childrenPath = this.mapMenuItem(i.children, currentPath);
         result.push(...childrenPath);
       } else {
+        const pageUrl = `app/${currentPath}`;
+        if (!this.validatePagePermission(pageUrl)) {
+          continue;
+        }
         const label: string = typeof i.title === "string" ? i.title as string : i.path;
         result.push({
           label: label,

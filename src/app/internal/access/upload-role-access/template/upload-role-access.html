@@ -8,15 +8,9 @@
       <button nz-button [nzLoading]="isDownloading()" (click)="downloadTemplate()">
         Download Template
       </button>
-      <nz-upload
-        [nzBeforeUpload]="beforeUpload"
-        [nzShowUploadList]="false"
-        [nzAccept]="acceptedFileTypes"
-        [nzDisabled]="isUploading()">
-        <button nz-button nzType="primary" [nzLoading]="isUploading()">
-          Upload Template
-        </button>
-      </nz-upload>
+      <button nz-button nzType="primary"  (click)="displayUploadFormToggle()">
+        Upload Template
+      </button>
     </div>
   </div>
 
@@ -33,4 +27,30 @@
     (queryChange)="handleQueryChange($event)"
     (doAction)="resolveRowAction($event)">
   </data-table>
+  <nz-modal
+    [nzVisible]="displayUploadForm()"
+    nzTitle="Upload Role Access"
+    nzWidth="min(92vw, 640px)"
+    (nzVisibleChange)="resetUploadForm()"
+    (nzOnCancel)="closeUploadForm()"
+    (nzOnOk)="doUploadFile()">
+    <ng-container *nzModalContent>
+      <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-2">
+          <label for="fileInput" class="text-sm">Description</label>
+          <input nz-input id="fileInput" #fileInput [(ngModel)]="description"/>
+        </div>
+        <nz-upload
+          [nzBeforeUpload]="beforeUpload"
+          [nzShowUploadList]="true"
+          [nzAccept]="acceptedFileTypes"
+          [nzFileList]="fileList()"
+          [nzDisabled]="isUploading()">
+          <button nz-button nzType="primary" [nzLoading]="isUploading()" [disabled]="fileList.length > 0">
+            Upload Template
+          </button>
+        </nz-upload>
+      </div>
+    </ng-container>
+  </nz-modal>
 </nz-card>

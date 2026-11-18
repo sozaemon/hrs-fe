@@ -6,6 +6,8 @@ export interface UploadedRoleAccess extends Record<string, RecordType> {
   moduleName: string;
   status: string;
   description?: string;
+  created:Date;
+  updated?:Date;
 }
 
 
