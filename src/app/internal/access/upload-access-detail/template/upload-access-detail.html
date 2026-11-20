@@ -1,32 +1,51 @@
 <nz-card nzTitle="Upload Access Detail" class="grid-row">
-  <div class="flex flex-row justify-between">
-    <div class="grid-row">
-      <h2 class="text-lg font-semibold">Uploaded Access Records</h2>
-      <p class="text-sm">
-        Review the records uploaded under header {{ headerId() ?? "-" }}. Fix the records flagged as
-        NOT VALID, then process the valid ones.
-      </p>
+  <div class="flex flex-col gap-2">
+    <div class="flex flex-row justify-between">
+      <div class="grid-row">
+        <h2 class="text-lg font-semibold">Uploaded Access Records</h2>
+        <p class="text-sm">
+          Review the records uploaded under header {{ headerId() ?? "-" }}. Fix the records flagged as
+          NOT VALID, then process the valid ones.
+        </p>
+      </div>
+      <div class="flex flex-row gap-2">
+        <button
+          nz-button
+          nzType="primary"
+          [disabled]="!selectedRecord()"
+          (click)="displayUpdateForm()">
+          Update Record
+        </button>
+      </div>
     </div>
-    <div class="flex flex-row gap-2">
-      <button
-        nz-button
-        nzType="primary"
-        [nzLoading]="isProcessing()"
-        [disabled]="headerId() === undefined"
-        (click)="processValidRecords()">
-        Process Valid Records
-      </button>
-      <button
-        nz-button
-        nzType="primary"
-        [disabled]="!selectedRecord()"
-        (click)="displayUpdateForm()">
-        Update Record
-      </button>
-    </div>
-   
+    @if (uploadHeader(); as header) {
+      <h3 class="text-lg font-semibold">Upload Header</h3>
+      <div class="flex flex-row justify-between mb-2">
+        
+          <p class="text-sm">
+            <b>Status:</b> {{ header.status }}
+          </p>
+          <p class="text-sm">
+            <b>Upload Date:</b> {{ header.created }}
+          </p>
+          <p class="text-sm">
+            <b>Description:</b> {{ header.description }}
+          </p>
+        
+        @if(header.status !== "COMPLETE"){
+          <button
+            nz-button
+            nzType="primary"
+            [nzLoading]="isProcessing()"
+            [disabled]="headerId() === undefined"
+            (click)="processValidRecords()">
+            Process Valid Records
+          </button>
+        }
+      </div>
+    }
   </div>
-
+  
   <data-table
     [data]="uploadedData()"
     [columnDefinition]="columns"

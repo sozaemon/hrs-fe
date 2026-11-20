@@ -40,10 +40,13 @@ export class Login {
 
   currentStep: number = 0;
 
-  private appPermission: PermissionMapping[] = permissions;
+  private readonly permissionByName = new Map<string, PermissionMapping>(
+    permissions.map((p) => [p.name, p]),
+  );
 
   loadRole(): void {
 
+    this.errorMessage.set(null);
     this.isSubmitting.set(true);
 
     this.authService.getRole({
@@ -70,45 +73,46 @@ export class Login {
     if (this.currentStep == 0) {
       return;
     }
-    this.errorMessage.set('');
+    this.errorMessage.set(null);
     this.isSubmitting.set(true);
 
-    try {
-      this.authService
-        .login({ userName: this.username, password: this.password, role: this.role() })
-        .pipe(
-          switchMap(() => this.authService.fetchPermission())
-        )
-        .subscribe({
-          next: (v) => {
-            if (v) {
+    this.authService
+      .login({ userName: this.username, password: this.password, role: this.role() })
+      .pipe(
+        switchMap(() => this.authService.fetchPermission()),
+      )
+      .subscribe({
+        next: (v) => {
+          if (!v) {
+            return;
+          }
 
-              let acceptedPermission: string[] = [];
-
-              v.data.forEach((e) => {
-                const mappingByRole: PermissionMapping[] = this.appPermission.filter((f) => f.name == e.permission);
-                if (mappingByRole.length) {
-                  acceptedPermission.push(mappingByRole[0].code.trim());
-                }
-              })
-
-              localStorage.setItem(PERMISSION_KEY.STORAGE_USER_PERMISSION, acceptedPermission.join(","));
-
-              const returnUrl = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || '/';
-              void this.router.navigateByUrl(returnUrl.startsWith('/') ? returnUrl : '/home');
+          const acceptedPermission: string[] = [];
+          for (const e of v.data) {
+            const mapping = this.permissionByName.get(e.permission);
+            if (mapping) {
+              acceptedPermission.push(mapping.code.trim());
             }
-          },
-          error: (e) => {
-            const errMessage = resolveHttpErrorMessage(e);
-            this.notification.error("Error", errMessage);
+          }
+
+          if (acceptedPermission.length === 0) {
+            this.errorMessage.set('No permissions assigned to this role.');
             this.isSubmitting.set(false);
-          },
-          complete: () => this.isSubmitting.set(false)
-        })
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        this.errorMessage.set(e.message);
-      }
-    }
+            return;
+          }
+
+          localStorage.setItem(PERMISSION_KEY.STORAGE_USER_PERMISSION, acceptedPermission.join(","));
+
+          const returnUrl = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || '/';
+          const safeUrl = returnUrl.startsWith('/') && !returnUrl.startsWith('//') ? returnUrl : '/home';
+          void this.router.navigateByUrl(safeUrl);
+        },
+        error: (e) => {
+          const errMessage = resolveHttpErrorMessage(e);
+          this.notification.error("Error", errMessage);
+          this.isSubmitting.set(false);
+        },
+        complete: () => this.isSubmitting.set(false),
+      });
   }
 }

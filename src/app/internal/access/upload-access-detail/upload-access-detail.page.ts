@@ -1,3 +1,4 @@
+import { DatePipe } from "@angular/common";
 import { Component, computed, DestroyRef, inject, OnInit, signal, ViewChild } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute } from "@angular/router";
@@ -15,16 +16,19 @@ import { resolveHttpErrorMessage } from "@app/shared/utility/error-utility";
 import { UploadAccessDetailService } from "./service/upload-access-detail.service";
 import { columnDefinition } from "./types/column-definition";
 import { UpdateUploadAccessDetailRequest, UploadAccessDetail } from "./types/upload-access-detail.type";
+import { UploadRoleAccessService } from "../upload-role-access/service/upload-role-access.service";
+import { UploadedRoleAccess } from "../upload-role-access/types/upload-role-access.type";
 
 @Component({
   templateUrl: "./template/upload-access-detail.html",
-  providers: [UploadAccessDetailService],
-  imports: [NzCardModule, NzButtonModule, NzModalModule, DataTable, DynamicFormBuilder],
+  providers: [UploadAccessDetailService, UploadRoleAccessService],
+  imports: [NzCardModule, NzButtonModule, NzModalModule, DatePipe, DataTable, DynamicFormBuilder],
 })
 export class UploadAccessDetailPage implements OnInit {
 
   private readonly route = inject(ActivatedRoute);
   private readonly uploadAccessDetailService = inject(UploadAccessDetailService);
+  private readonly uploadRoleAccessService = inject(UploadRoleAccessService);
   private readonly notification = inject(NzNotificationService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -46,6 +50,7 @@ export class UploadAccessDetailPage implements OnInit {
 
   readonly selectedRecord = signal<UploadAccessDetail | undefined>(undefined);
   readonly displayForm = signal<boolean>(false);
+  readonly uploadHeader = signal<UploadedRoleAccess | undefined>(undefined);
 
   readonly formConfig = computed<FormConfig>(() => {
     const record = this.selectedRecord();
@@ -117,13 +122,13 @@ export class UploadAccessDetailPage implements OnInit {
           this.headerId.set(undefined);
           this.uploadedData.set([]);
           this.totalSize.set(0);
-          // this.notification.error("Error", "A valid headerId query parameter is required.");
           return;
         }
 
         this.headerId.set(headerId);
         this.page.set(1);
         this.loadData();
+        this.loadHeaderData();
       });
   }
 
@@ -240,8 +245,37 @@ export class UploadAccessDetailPage implements OnInit {
     });
   }
 
+  private loadHeaderData(): void {
+    if (this.headerId()) {
+      const filter: FilterRequest[] = [{
+        label: "HeaderId",
+        fieldName: "id",
+        value: this.headerId(),
+        operator: "EQ",
+        joinOperator: "AND"
+      }]
+
+      this.uploadRoleAccessService.paginateList({
+        filter: filter,
+        page: 1,
+        pageSize: 1
+      }).subscribe({
+        next: (r) => {
+          if (r.data.data && r.data.data.length > 0) {
+            this.uploadHeader.set(r.data.data[0]);
+          } else {
+            this.uploadHeader.set(undefined);
+          }
+        },
+        error: (e) => {
+          this.notification.error("Error", resolveHttpErrorMessage(e));
+        },
+      });
+    }
+  }
+
   onSelectedRecord(record: UploadAccessDetail[]): void {
-    if (record.length > 0) {
+    if (record.length > 0 && record[0].uploadStatus !== "COMPLETED") {
       this.selectedRecord.set(record[0]);
     }
   }
