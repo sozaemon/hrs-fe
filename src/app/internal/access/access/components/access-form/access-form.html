@@ -1,36 +1,24 @@
-<nz-modal [(nzVisible)]="displayAccessForm"
-  (nzOnCancel)="closeForm()"
-  /* (nzOnOk)="resolveOkFunction()" */
-  nzWidth="min(92vw, 640px)"
-  nzTitle="Access Form"
->
+<nz-modal [(nzVisible)]="displayAccessForm" (nzOnCancel)="closeForm()" /* (nzOnOk)="resolveOkFunction()" */
+  nzWidth="min(92vw, 640px)" nzTitle="Access Form">
   <ng-container *nzModalContent>
     <div class="form-container">
-      <dynamic-form-builder 
-      [config]="formConfig()"
-      [submitLabel]="resolveSubmitLabel()"
-      (submitted)="onSubmit($any($event))"
-      [showActions]=false
-      />
+      <dynamic-form-builder [config]="formConfig()" [submitLabel]="resolveSubmitLabel()"
+        (submitted)="onSubmit($any($event))" [showActions]=false />
       <div>
         @if(isLoading()){
-          <span>Load role data</span>
+        <span>Load role data</span>
         }@else {
-           <nz-checkbox-group
-            [nzDisabled]="mode() === 'read'"
-            [nzOptions]="roleOptions()"
-            [(ngModel)]="assignedRole" 
-            />
+        <nz-checkbox-group [nzDisabled]="mode() === 'read'" [nzOptions]="roleOptions()" [(ngModel)]="assignedRole" />
         }
-       
+
       </div>
     </div>
   </ng-container>
-  <div *nzModalFooter >
+  <div *nzModalFooter>
     <button nz-button [nzType]="'default'" (click)="closeForm()">{{mode() === "read" ? "Close" : "Cancel"}}</button>
     @if(mode() !== "read"){
-      <button nz-button [nzType]="'primary'" [nzLoading]="isLoading()" 
-      (click)="resolveOkFunction()">{{mode() === "create" ? "Create" : "Update"}}</button>
+    <button nz-button [nzType]="'primary'" [nzLoading]="isLoading()" (click)="resolveOkFunction()">{{mode() === "create"
+      ? "Create" : "Update"}}</button>
     }
   </div>
 </nz-modal>

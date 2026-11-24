@@ -9,69 +9,44 @@
         </p>
       </div>
       <div class="flex flex-row gap-2">
-        <button
-          nz-button
-          nzType="primary"
-          [disabled]="!selectedRecord()"
-          (click)="displayUpdateForm()">
+        <button nz-button nzType="primary" [disabled]="!selectedRecord()" (click)="displayUpdateForm()">
           Update Record
         </button>
       </div>
     </div>
     @if (uploadHeader(); as header) {
-      <h3 class="text-lg font-semibold">Upload Header</h3>
-      <div class="flex flex-row justify-between mb-2">
-        
-          <p class="text-sm">
-            <b>Status:</b> {{ header.status }}
-          </p>
-          <p class="text-sm">
-            <b>Upload Date:</b> {{ header.created }}
-          </p>
-          <p class="text-sm">
-            <b>Description:</b> {{ header.description }}
-          </p>
-        
-        @if(header.status !== "COMPLETE"){
-          <button
-            nz-button
-            nzType="primary"
-            [nzLoading]="isProcessing()"
-            [disabled]="headerId() === undefined"
-            (click)="processValidRecords()">
-            Process Valid Records
-          </button>
-        }
-      </div>
+    <h3 class="text-lg font-semibold">Upload Header</h3>
+    <div class="flex flex-row justify-between mb-2">
+      <p class="text-sm">
+        <b>Status:</b> {{ header.status }}
+      </p>
+      <p class="text-sm">
+        <b>Upload Date:</b> {{formatDateString(header.created) }}
+      </p>
+      <p class="text-sm">
+        <b>Description:</b> {{ header.description }}
+      </p>
+
+      @if(header.status !== "COMPLETE"){
+      <button nz-button nzType="primary" [nzLoading]="isProcessing()" [disabled]="headerId() === undefined"
+        (click)="processValidRecords()">
+        Process Valid Records
+      </button>
+      }
+    </div>
     }
   </div>
-  
-  <data-table
-    [data]="uploadedData()"
-    [columnDefinition]="columns"
-    [totalRecords]="totalSize()"
-    [page]="page()"
-    [pageSize]="pageSize()"
-    [loading]="isLoading()"
-    [showPagination]="true"
-    [allowRowSelect]="true"
-    (queryChange)="handleQueryChange($event)"
-    (selectedRow)="onSelectedRecord($event)">
+
+  <data-table [data]="uploadedData()" [columnDefinition]="columns" [totalRecords]="totalSize()" [page]="page()"
+    [pageSize]="pageSize()" [loading]="isLoading()" [showPagination]="true" [allowRowSelect]="true"
+    (queryChange)="handleQueryChange($event)" (selectedRow)="onSelectedRecord($event)">
   </data-table>
 
-  <nz-modal
-    [nzVisible]="displayForm()"
-    nzTitle="Fix Uploaded Record"
-    nzWidth="min(92vw, 640px)"
-    (nzVisibleChange)="displayForm.set($event)"
-    (nzOnCancel)="closeForm()"
-    (nzOnOk)="submitForm()">
+  <nz-modal [nzVisible]="displayForm()" nzTitle="Fix Uploaded Record" nzWidth="min(92vw, 640px)"
+    (nzVisibleChange)="displayForm.set($event)" (nzOnCancel)="closeForm()" (nzOnOk)="submitForm()">
     <ng-container *nzModalContent>
       @if (displayForm()) {
-        <dynamic-form-builder
-          [config]="formConfig()"
-          [showActions]="false"
-          submitLabel="Save" />
+      <dynamic-form-builder [config]="formConfig()" [showActions]="false" submitLabel="Save" />
       }
     </ng-container>
   </nz-modal>

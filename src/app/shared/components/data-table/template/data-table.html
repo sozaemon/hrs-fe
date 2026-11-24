@@ -1,74 +1,52 @@
 <div>
-  <data-table-filter 
-    [filterDefinition]="filterDefinition()" 
-    (filters)="readFilterData($any($event))"/>
-  <nz-table
-    [nzData]="data()"
-    [nzFrontPagination]="false"
-    [nzLoading]="loading()"
-    [nzPageIndex]="pageIndex"
-    [nzPageSize]="size"
-    [nzTotal]="totalRecords()"
-    [nzShowPagination]="showPagination()"
+  <data-table-filter [filterDefinition]="filterDefinition()" (filters)="readFilterData($any($event))" />
+  <nz-table [nzData]="data()" [nzFrontPagination]="false" [nzLoading]="loading()" [nzPageIndex]="pageIndex"
+    [nzPageSize]="size" [nzTotal]="totalRecords()" [nzShowPagination]="showPagination()"
     (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
       <tr>
         @if (useRowsCheckbox()) {
-          <th
-            id="headerCheckbox"
-            nzShowCheckbox
-            [nzChecked]="allDataIsChecked()"
-            [nzIndeterminate]="anyDataIsChecked() && !allDataIsChecked()"
-            (nzCheckedChange)="onAllRowsChecked($event)">
-          </th>
+        <th id="headerCheckbox" nzShowCheckbox [nzChecked]="allDataIsChecked()"
+          [nzIndeterminate]="anyDataIsChecked() && !allDataIsChecked()" (nzCheckedChange)="onAllRowsChecked($event)">
+        </th>
         }
         @for (column of columnDefinition(); track column.field) {
-          <th [id]="column.field"
-            [nzColumnKey]="column.field"
-            [nzSortFn]="column.allowSort ?? false"
-            [nzShowSort]="column.allowSort ?? false">
-            {{ column.header }}
-          </th>
+        <th [id]="column.field" [nzColumnKey]="column.field" [nzSortFn]="column.allowSort ?? false"
+          [nzShowSort]="column.allowSort ?? false">
+          {{ column.header }}
+        </th>
         }
         @if(actions().length > 0){
-          <th id="actions">Actions</th>
+        <th id="actions">Actions</th>
         }
       </tr>
     </thead>
     <tbody>
       @for (row of data(); track row[rowKey()]) {
-        <tr (click)="handleRowClick(row)" (keyDown)="handleRowClick(row)">
-          @if (useRowsCheckbox()) {
-            <td
-              nzShowCheckbox
-              [nzChecked]="rowContainSelectedRow(row)"
-              (nzCheckedChange)="onRowClick(row)">
-            </td>
-          }
-          @for (column of columnDefinition(); track column.field) {
-            <td>{{ renderCell(row, column) }}</td>
-          }
-          @if(actions().length > 0){
-            <td>
-              <nz-space-compact>
-                @for(ac of actions(); track ac.name){
-                  <button 
-                    nz-button
-                    nzType="primary"
-                    nzSize="small"
-                    (click)="callAction(ac, row)"
-                    [ngClass]="ac.class ? ac.class : 'default-class'"
-                    >
-                    @if(ac.icon){
-                      <nz-icon [nzType]="ac.icon" />
-                    }
-                    {{ac.label}}
-                  </button>
-                }
-              </nz-space-compact>
-            </td>
-          }
-        </tr>
+      <tr (click)="handleRowClick(row)" (keyDown)="handleRowClick(row)">
+        @if (useRowsCheckbox()) {
+        <td nzShowCheckbox [nzChecked]="rowContainSelectedRow(row)" (nzCheckedChange)="onRowClick(row)">
+        </td>
+        }
+        @for (column of columnDefinition(); track column.field) {
+        <td>{{ renderCell(row, column) }}</td>
+        }
+        @if(actions().length > 0){
+        <td>
+          <nz-space-compact>
+            @for(ac of actions(); track ac.name){
+            <button nz-button nzType="primary" nzSize="small" (click)="callAction(ac, row)"
+              [ngClass]="ac.class ? ac.class : 'default-class'">
+              @if(ac.icon){
+              <nz-icon [nzType]="ac.icon" />
+              }
+              {{ac.label}}
+            </button>
+            }
+          </nz-space-compact>
+        </td>
+        }
+      </tr>
       }
     </tbody>
   </nz-table>

@@ -1,107 +1,91 @@
 <div class="filter-container">
-  <nz-modal [(nzVisible)]="displayFilterModal"
-    (nzOnCancel)="closeFilterModal()"
-    (nzOnOk)="addFilter()"
-    nzTitle="Add filter"
-    nzWidth="min(92vw, 640px)"
-    nzOkText="Add filter">
+  <nz-modal [(nzVisible)]="displayFilterModal" (nzOnCancel)="closeFilterModal()" (nzOnOk)="addFilter()"
+    nzTitle="Add filter" nzWidth="min(92vw, 640px)" nzOkText="Add filter">
     <ng-container *nzModalContent>
       <div class="filter-form">
         <div class="form-field">
           <label for="filter-field">Field</label>
-          <nz-select id="filter-field" [(ngModel)]="field" name="field"
-          nzPlaceHolder="Select Field"
-            nzShowSearch
-          (ngModelChange)="onFieldModelChange()">
+          <nz-select id="filter-field" [(ngModel)]="field" name="field" nzPlaceHolder="Select Field" nzShowSearch
+            (ngModelChange)="onFieldModelChange()">
             @for(fl of filterAbleColumnDef(); track fl.value) {
-              <nz-option [nzValue]="fl.value" [nzLabel]="fl.label" />
+            <nz-option [nzValue]="fl.value" [nzLabel]="fl.label" />
             }
           </nz-select>
         </div>
 
         <div class="form-field">
           <label for="filter-operator">Condition</label>
-          <nz-select id="filter-operator" [(ngModel)]="operator" name="operator"
-            [nzDisabled]="!field()"
+          <nz-select id="filter-operator" [(ngModel)]="operator" name="operator" [nzDisabled]="!field()"
             nzPlaceHolder="Select condition">
             @for(op of operators(); track op.value) {
-              <nz-option [nzValue]="op.value" [nzLabel]="op.label" />
+            <nz-option [nzValue]="op.value" [nzLabel]="op.label" />
             }
           </nz-select>
         </div>
 
         @if(operator() !== "NOTNULL") {
-          <div class="form-field">
-            <label>Value</label>
-            <div class="value-controls">
-              @switch (filterMode()) {
-                @case("single-string") {
-                  @if(valueOptions().length > 0) {
-                    <nz-select [(ngModel)]="value" name="valueSelect" nzPlaceHolder="Select a value">
-                      @for(o of valueOptions(); track o.value) {
-                        <nz-option [nzValue]="o.value" [nzLabel]="o.label" />
-                      }
-                    </nz-select>
-                  } @else {
-                    <input nz-input id="filter-value" [(ngModel)]="value" name="value"
-                      placeholder="Enter a value" aria-label="Filter value" />
-                  }
-                }
-                @case("single-number") {
-                  <input nz-input type="number" id="filter-number" [(ngModel)]="value" name="value"
-                    placeholder="Enter a number" aria-label="Filter value" />
-                }
-                @case("single-date") {
-                  <nz-date-picker [(ngModel)]="timeValue" name="timeValue"
-                    nzPlaceHolder="Select a date" />
-                }
-                @case("double-number") {
-                  <div class="range-controls">
-                    <input nz-input type="number" id="filter-number-start" [(ngModel)]="value" name="value"
-                      placeholder="Minimum" aria-label="Minimum value" />
-                    <span class="range-separator" aria-hidden="true">to</span>
-                    <input nz-input type="number" id="filter-number-end" [(ngModel)]="value2" name="value2"
-                      placeholder="Maximum" aria-label="Maximum value" />
-                  </div>
-                }
-                @case("double-date") {
-                  <div class="range-controls">
-                    <nz-date-picker [(ngModel)]="timeValue" name="timeValue"
-                      nzPlaceHolder="Start date" />
-                    <span class="range-separator" aria-hidden="true">to</span>
-                    <nz-date-picker [(ngModel)]="timeValue2" name="timeValue2"
-                      nzPlaceHolder="End date" />
-                  </div>
-                }
+        <div class="form-field">
+          <label>Value</label>
+          <div class="value-controls">
+            @switch (filterMode()) {
+            @case("single-string") {
+            @if(valueOptions().length > 0) {
+            <nz-select [(ngModel)]="value" name="valueSelect" nzPlaceHolder="Select a value">
+              @for(o of valueOptions(); track o.value) {
+              <nz-option [nzValue]="o.value" [nzLabel]="o.label" />
               }
+            </nz-select>
+            } @else {
+            <input nz-input id="filter-value" [(ngModel)]="value" name="value" placeholder="Enter a value"
+              aria-label="Filter value" />
+            }
+            }
+            @case("single-number") {
+            <input nz-input type="number" id="filter-number" [(ngModel)]="value" name="value"
+              placeholder="Enter a number" aria-label="Filter value" />
+            }
+            @case("single-date") {
+            <nz-date-picker [(ngModel)]="timeValue" name="timeValue" nzPlaceHolder="Select a date" />
+            }
+            @case("double-number") {
+            <div class="range-controls">
+              <input nz-input type="number" id="filter-number-start" [(ngModel)]="value" name="value"
+                placeholder="Minimum" aria-label="Minimum value" />
+              <span class="range-separator" aria-hidden="true">to</span>
+              <input nz-input type="number" id="filter-number-end" [(ngModel)]="value2" name="value2"
+                placeholder="Maximum" aria-label="Maximum value" />
             </div>
+            }
+            @case("double-date") {
+            <div class="range-controls">
+              <nz-date-picker [(ngModel)]="timeValue" name="timeValue" nzPlaceHolder="Start date" />
+              <span class="range-separator" aria-hidden="true">to</span>
+              <nz-date-picker [(ngModel)]="timeValue2" name="timeValue2" nzPlaceHolder="End date" />
+            </div>
+            }
+            }
           </div>
+        </div>
         }
       </div>
     </ng-container>
   </nz-modal>
-  <button nz-button nzType="primary" (click)="displayFilter()" class="bg-green-500"
-    nzTooltipTitle="Add Filter" 
-    [nzTooltipPlacement]="['topLeft', 'leftTop']" nz-button nz-tooltip
-    >
+  <button nz-button nzType="primary" (click)="displayFilter()" class="bg-green-500" nzTooltipTitle="Add Filter"
+    [nzTooltipPlacement]="['topLeft', 'leftTop']" nz-button nz-tooltip>
     <nz-icon nzType="plus" nzTheme="outline" />Filter</button>
-  <button nz-button nzType="primary" (click)="clearFilter()" class="bg-orange-500"
-    nzTooltipTitle="Clear Filter" 
-    [nzTooltipPlacement]="['topLeft', 'leftTop']" nz-button nz-tooltip
-  >
+  <button nz-button nzType="primary" (click)="clearFilter()" class="bg-orange-500" nzTooltipTitle="Clear Filter"
+    [nzTooltipPlacement]="['topLeft', 'leftTop']" nz-button nz-tooltip>
     <nz-icon nzType="reload" nzTheme="outline" />Clear Filter
   </button>
-  <button nz-button nzType="primary" (click)="applyFilter()" 
-    nzTooltipTitle="Apply Filter" 
-    [nzTooltipPlacement]="['topLeft', 'leftTop']" nz-button nz-tooltip
-  >
+  <button nz-button nzType="primary" (click)="applyFilter()" nzTooltipTitle="Apply Filter"
+    [nzTooltipPlacement]="['topLeft', 'leftTop']" nz-button nz-tooltip>
     <nz-icon nzType="check" nzTheme="outline" />Apply Filter
   </button>
   <div class="tags-holder">
     @for(fl of collectedFilters(); track fl.fieldName){
-      <nz-tag nzMode="closeable" (nzOnClose)="removeFilter(fl)" nzColor="geekblue">
-        {{resolveFilterTag(fl)}}
-      </nz-tag>
+    <nz-tag nzMode="closeable" (nzOnClose)="removeFilter(fl)" nzColor="geekblue">
+      {{resolveFilterTag(fl)}}
+    </nz-tag>
     }
   </div>
 </div>

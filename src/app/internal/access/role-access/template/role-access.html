@@ -4,19 +4,10 @@
       <h2 class="text-lg font-semibold">Role Access</h2>
       <p class="text-sm">View Assigned Access to Role</p>
     </div>
-    <div>
-    </div>
   </div>
-  <data-table
-    [data]="roleAccessData()"
-    [columnDefinition]="roleAccessColumns"
-    [totalRecords]="totalSize()"
-    [page]="page()"
-    [pageSize]="pageSize()"
-    [showPagination]="true"
-    [allowRowSelect]="false"
-    (queryChange)="handleQueryChange($event)"
-  >
+  <data-table [data]="roleAccessData()" [columnDefinition]="roleAccessColumns" [totalRecords]="totalSize()"
+    [page]="page()" [pageSize]="pageSize()" [showPagination]="true" [allowRowSelect]="false"
+    (queryChange)="handleQueryChange($event)">
 
   </data-table>
 </nz-card>

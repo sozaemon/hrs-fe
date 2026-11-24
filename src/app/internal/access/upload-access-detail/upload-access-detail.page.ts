@@ -1,4 +1,3 @@
-import { DatePipe } from "@angular/common";
 import { Component, computed, DestroyRef, inject, OnInit, signal, ViewChild } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute } from "@angular/router";
@@ -18,13 +17,17 @@ import { columnDefinition } from "./types/column-definition";
 import { UpdateUploadAccessDetailRequest, UploadAccessDetail } from "./types/upload-access-detail.type";
 import { UploadRoleAccessService } from "../upload-role-access/service/upload-role-access.service";
 import { UploadedRoleAccess } from "../upload-role-access/types/upload-role-access.type";
+import { format } from 'date-fns';
 
 @Component({
   templateUrl: "./template/upload-access-detail.html",
   providers: [UploadAccessDetailService, UploadRoleAccessService],
-  imports: [NzCardModule, NzButtonModule, NzModalModule, DatePipe, DataTable, DynamicFormBuilder],
+  imports: [NzCardModule, NzButtonModule, NzModalModule, DataTable, DynamicFormBuilder],
 })
 export class UploadAccessDetailPage implements OnInit {
+  format(arg0: any) {
+    throw new Error('Method not implemented.');
+  }
 
   private readonly route = inject(ActivatedRoute);
   private readonly uploadAccessDetailService = inject(UploadAccessDetailService);
@@ -285,5 +288,12 @@ export class UploadAccessDetailPage implements OnInit {
       this.displayForm.set(true);
     }
 
+  }
+
+  formatDateString(date?: Date): string {
+    if (date) {
+      return format(date, "dd/MM/yyyy HH:mm")
+    }
+    return "";
   }
 }

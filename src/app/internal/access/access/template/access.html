@@ -1,5 +1,5 @@
 <nz-card nzTitle="Access Management" class="grid-row">
-  <div  class="flex flex-row justify-between">
+  <div class="flex flex-row justify-between">
     <div class="grid-row">
       <h2 class="text-lg font-semibold">Access permissions</h2>
       <p class="text-sm">View and manage the routes and API permissions configured for the workspace.</p>
@@ -7,25 +7,12 @@
     <button nz-button nzType="primary" (click)="openCreateAccessForm()">Add Access</button>
   </div>
 
-  <data-table
-    [data]="accessData()"
-    [columnDefinition]="accessColumns"
-    [totalRecords]="totalSize()"
-    [page]="page()"
-    [pageSize]="pageSize()"
-    [showPagination]="true"
-    [allowRowSelect]="true"
-    [actions]="resolveActions()"
-    (queryChange)="handleQueryChange($event)"
-    (doAction)="resolveRowAction($event)"
-    >
+  <data-table [data]="accessData()" [columnDefinition]="accessColumns" [totalRecords]="totalSize()" [page]="page()"
+    [pageSize]="pageSize()" [showPagination]="true" [allowRowSelect]="true" [actions]="resolveActions()"
+    (queryChange)="handleQueryChange($event)" (doAction)="resolveRowAction($event)">
   </data-table>
   <!-- add access form modal here -->
-  <access-form 
-    (result)="onFormSubmit($event)"
-    [access]="selectedAccess()"
-    [mode]="formMode()"
-    [(displayAccessForm)]="displayForm"
-    />
+  <access-form (result)="onFormSubmit($event)" [access]="selectedAccess()" [mode]="formMode()"
+    [(displayAccessForm)]="displayForm" />
   <assign-access-form [access]="selectedAccess()" [(displayAssignAccessForm)]="displayAccessForm" />
 </nz-card>
